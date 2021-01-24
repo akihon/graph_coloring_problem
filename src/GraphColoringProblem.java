@@ -1,5 +1,6 @@
 import algorithm.AlgorithmInterface;
 import algorithm.FruchtermanReingold;
+import draw.Graph;
 import localsearch.LocalSearch;
 import localsearch.LocalSearchInterface;
 import model.Coordinate;
@@ -17,7 +18,7 @@ public class GraphColoringProblem {
   private GraphColoringProblem() {
     CreateInterface problem;
     try {
-      problem = new Create(10, 0.7);
+      problem = new Create(20, 0.2);
     } catch (InvalidArgument invalidArgument) {
       invalidArgument.printStackTrace();
       return;
@@ -26,13 +27,12 @@ public class GraphColoringProblem {
     DirectedGraph directedGraph = problem.directedGraph();
     AlgorithmInterface<Coordinate[]> fr = new FruchtermanReingold(directedGraph);
     LocalSearchInterface ls = new LocalSearch<>(
-        10,
+        100,
         10,
         fr
     );
 
     ls.go();
-
-    System.out.println(Arrays.toString(fr.getResult()));
+    new Graph(directedGraph, fr.getResult());
   }
 }
