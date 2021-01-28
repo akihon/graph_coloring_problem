@@ -10,17 +10,33 @@ public class Coloring {
   public int color;
   public int[] vertexColors;
 
+  /**
+   * constructor.
+   *
+   * @param vertex int
+   */
   public Coloring(int vertex) {
     this.color = 0;
     this.vertexColors = new int[vertex];
   }
 
+  /**
+   * swapVertexColors swap colors of vertexes.
+   *
+   * @param v1 int
+   * @param v2 int
+   */
   public void swapVertexColors(final int v1, final int v2) {
     int c = vertexColors[v1];
     vertexColors[v1] = vertexColors[v2];
     vertexColors[v2] = c;
   }
 
+  /**
+   * copy copy this.
+   *
+   * @return Coloring
+   */
   public Coloring copy() {
     Coloring c = new Coloring(this.vertexColors.length);
     c.color = this.color;
@@ -29,6 +45,9 @@ public class Coloring {
     return c;
   }
 
+  /**
+   * updateColor calc the number of used colors.
+   */
   public void updateColor() {
     ArrayList<Integer> usedColor = new ArrayList<>();
     for (int c : vertexColors) {

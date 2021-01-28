@@ -1,11 +1,13 @@
 package draw;
 
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.util.Arrays;
+import javax.swing.JFrame;
 import model.Coloring;
 import model.Coordinate;
 import model.DirectedGraph;
-import javax.swing.*;
-import java.awt.*;
-import java.util.Arrays;
 
 /**
  * Graph draw a graph.
@@ -28,9 +30,16 @@ public class Graph extends JFrame {
       Color.GRAY,
       Color.LIGHT_GRAY,
       Color.DARK_GRAY,
-      Color.BLACK,
-  };
+      Color.BLACK
+    };
 
+  /**
+   * constructor.
+   *
+   * @param directedGraph model.DirectedGraph
+   * @param coordinates   array of model.Coordinate
+   * @param coloring      model.Coloring
+   */
   public Graph(DirectedGraph directedGraph, Coordinate[] coordinates, Coloring coloring) {
     super("graph coloring");
     setDefaultCloseOperation(EXIT_ON_CLOSE);
