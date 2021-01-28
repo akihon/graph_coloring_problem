@@ -18,6 +18,7 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
   private final boolean[] isDegreeOne;
   private final Coordinate[] forceVectors;
   private final Coordinate[] coordinates;
+  private final Random random = new Random(System.currentTimeMillis());
 
   /**
    * constructor.
@@ -42,8 +43,6 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
 
   @Override
   public Coordinate[] initialize() {
-    Random random = new Random(System.currentTimeMillis());
-
     initializeIsDegreeOne();
 
     for (int v = 0; v < directedGraph.vertex; v++) {
@@ -54,6 +53,7 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
       boolean isSame = true;
 
       while (isSame) {
+
         double x = random.nextDouble();
         double y = random.nextDouble();
         Coordinate c = new Coordinate(x, y);
@@ -116,8 +116,8 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
   }
 
   @Override
-  public boolean isImproved() {
-    return true;
+  public double evaluate(Coordinate[] result) {
+    return 0;
   }
 
   @Override
@@ -193,8 +193,6 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
   }
 
   private void setCoordinatesOfDegreeOnePoint() {
-    Random random = new Random(System.currentTimeMillis());
-
     for (int v = 0; v < directedGraph.vertex; v++) {
       if (!isDegreeOne[v]) {
         continue;

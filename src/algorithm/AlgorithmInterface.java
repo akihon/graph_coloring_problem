@@ -10,7 +10,14 @@ public interface AlgorithmInterface<T> {
 
   T algorithm(final int iteration);
 
-  boolean isImproved();
+  /**
+   * evaluate return evaluation value.
+   * the value is lower, the solution is better.
+   *
+   * @param result T
+   * @return double
+   */
+  double evaluate(T result);
 
   void update(final int iteration, final T result);
 

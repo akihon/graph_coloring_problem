@@ -11,6 +11,13 @@ public class LocalSearch<T> implements LocalSearchInterface {
   final int maxInnerLoop;
   final AlgorithmInterface<T> algo;
 
+  /**
+   * constructor.
+   *
+   * @param maxIteration int
+   * @param maxInnerLoop int
+   * @param algo algorithm.AlgorithmInterface
+   */
   public LocalSearch(
       final int maxIteration,
       final int maxInnerLoop,
@@ -26,17 +33,21 @@ public class LocalSearch<T> implements LocalSearchInterface {
     int iteration = 0;
     boolean improved = true;
 
-    algo.initialize();
+    T result = algo.initialize();
+    double eval = algo.evaluate(result);
 
     while (improved && iteration++ < maxIteration) {
       int innerLoop = 0;
 
       while (innerLoop++ < maxInnerLoop) {
-        T result = algo.algorithm(iteration);
-        improved = algo.isImproved();
+        T newResult = algo.algorithm(iteration);
+        double newEval = algo.evaluate(newResult);
+
+        improved = eval >= newEval;
 
         if (improved) {
-          algo.update(iteration, result);
+          eval = newEval;
+          algo.update(iteration, newResult);
           break;
         }
       }

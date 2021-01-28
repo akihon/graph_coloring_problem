@@ -1,5 +1,6 @@
 package draw;
 
+import model.Coloring;
 import model.Coordinate;
 import model.DirectedGraph;
 import javax.swing.*;
@@ -14,12 +15,27 @@ public class Graph extends JFrame {
   private static final int HEIGHT = 600;
   private final DirectedGraph directedGraph;
   private final Coordinate[] coordinates;
+  private final Coloring coloring;
+  private final Color[] colors = new Color[]{
+      Color.RED,
+      Color.GREEN,
+      Color.BLUE,
+      Color.YELLOW,
+      Color.CYAN,
+      Color.PINK,
+      Color.MAGENTA,
+      Color.ORANGE,
+      Color.GRAY,
+      Color.LIGHT_GRAY,
+      Color.DARK_GRAY,
+      Color.BLACK,
+  };
 
-  public Graph(DirectedGraph directedGraph, Coordinate[] coordinates) {
+  public Graph(DirectedGraph directedGraph, Coordinate[] coordinates, Coloring coloring) {
     super("graph coloring");
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     setSize(WIDTH, HEIGHT);
-    //setLocationRelativeTo(null);
+    setLocationRelativeTo(null);
     setResizable(true);
 
     Container container = getContentPane();
@@ -27,6 +43,7 @@ public class Graph extends JFrame {
 
     this.directedGraph = directedGraph;
     this.coordinates = Arrays.copyOf(coordinates, coordinates.length);
+    this.coloring = coloring;
 
     this.setVisible(true);
   }
@@ -37,21 +54,25 @@ public class Graph extends JFrame {
 
     Graphics graphics = getContentPane().getGraphics();
 
-    for (Coordinate coordinate : coordinates) {
-      graphics.fillOval(
-          (int) (coordinate.getX() * Graph.WIDTH) - 7,
-          (int) (coordinate.getY() * Graph.HEIGHT) - 7,
-          14,
-          14
+    for (int e = 0; e < directedGraph.edge; e += 2) {
+      graphics.drawLine(
+          (int) (coordinates[directedGraph.tail[e]].getX() * (Graph.WIDTH - 16) + 8),
+          (int) (coordinates[directedGraph.tail[e]].getY() * (Graph.HEIGHT - 16) + 8),
+          (int) (coordinates[directedGraph.head[e]].getX() * (Graph.WIDTH - 16) + 8),
+          (int) (coordinates[directedGraph.head[e]].getY() * (Graph.HEIGHT - 16) + 8)
       );
     }
 
-    for (int e = 0; e < directedGraph.edge; e += 2) {
-      graphics.drawLine(
-          (int) (coordinates[directedGraph.tail[e]].getX() * Graph.WIDTH),
-          (int) (coordinates[directedGraph.tail[e]].getY() * Graph.HEIGHT),
-          (int) (coordinates[directedGraph.head[e]].getX() * Graph.WIDTH),
-          (int) (coordinates[directedGraph.head[e]].getY() * Graph.HEIGHT)
+    for (int v = 0; v < coordinates.length; v++) {
+      if (coloring.color < colors.length) {
+        graphics.setColor(colors[coloring.vertexColors[v]]);
+      }
+
+      graphics.fillOval(
+          (int) (coordinates[v].getX() * (Graph.WIDTH - 16)) - 7 + 8,
+          (int) (coordinates[v].getY() * (Graph.HEIGHT - 16)) - 7 + 8,
+          14,
+          14
       );
     }
   }
