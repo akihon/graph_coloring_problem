@@ -33,6 +33,25 @@ public class Coloring {
   }
 
   /**
+   * isFeasible return the feasible solution or not.
+   *
+   * @param directedGraph model.DirectedGraph
+   * @return boolean
+   */
+  public boolean isFeasible(final DirectedGraph directedGraph) {
+    for (int e : directedGraph.getUndirectedGraphEdges()) {
+      int t = directedGraph.tail[e];
+      int h = directedGraph.head[e];
+
+      if (vertexColors[t] == vertexColors[h]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
    * copy copy this.
    *
    * @return Coloring

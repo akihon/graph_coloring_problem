@@ -2,6 +2,7 @@ import algorithm.AlgorithmInterface;
 import algorithm.FruchtermanReingold;
 import algorithm.GraphColoring;
 import draw.Graph;
+import localsearch.Annealing;
 import localsearch.LocalSearch;
 import localsearch.LocalSearchInterface;
 import model.Coloring;
@@ -19,7 +20,7 @@ public class GraphColoringProblem {
   private GraphColoringProblem() {
     CreateInterface problem;
     try {
-      problem = new Create(20, 0.3);
+      problem = new Create(50, 0.15);
     } catch (InvalidArgument invalidArgument) {
       invalidArgument.printStackTrace();
       return;
@@ -27,14 +28,20 @@ public class GraphColoringProblem {
 
     DirectedGraph directedGraph = problem.directedGraph();
     AlgorithmInterface<Coloring> gc = new GraphColoring(directedGraph);
-    LocalSearchInterface lsForGraphColoring = new LocalSearch<>(
-        10000,
-        2000,
+    //LocalSearchInterface lsForGraphColoring = new LocalSearch<>(
+    //    10000,
+    //    2000,
+    //    gc
+    //);
+    LocalSearchInterface lsForGraphColoring = new Annealing<>(
+        5000,
+        30,
         gc
     );
     lsForGraphColoring.go();
 
     System.out.println(gc.getResult());
+    System.out.printf("feasible : %b\n", gc.getResult().isFeasible(directedGraph));
     System.out.printf("evaluation value: %6.3f\n\n", gc.evaluate(gc.getResult()));
 
     AlgorithmInterface<Coordinate[]> fr = new FruchtermanReingold(directedGraph);
@@ -45,10 +52,10 @@ public class GraphColoringProblem {
     );
     lsForFruchtermanReingold.go();
 
-    System.out.println("coordinates");
-    for (Coordinate coordinate : fr.getResult()) {
-      System.out.println(coordinate);
-    }
+    //System.out.println("coordinates");
+    //for (Coordinate coordinate : fr.getResult()) {
+    //  System.out.println(coordinate);
+    //}
 
     new Graph(directedGraph, fr.getResult(), gc.getResult());
   }

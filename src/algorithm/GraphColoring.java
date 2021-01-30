@@ -91,7 +91,7 @@ public class GraphColoring implements AlgorithmInterface<Coloring> {
       penalty += subGraphVertexes * subGraphVertexes + subGraphEdges;
     }
 
-    return result.color + (double) penalty / ALPHA;
+    return result.color + (double) (penalty - directedGraph.vertex) / ALPHA;
   }
 
   @Override
