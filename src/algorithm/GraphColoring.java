@@ -23,14 +23,7 @@ public class GraphColoring implements AlgorithmInterface<Coloring> {
    * @param directedGraph model.DirectedGraph
    */
   public GraphColoring(final DirectedGraph directedGraph) {
-    this.directedGraph = new DirectedGraph(
-        directedGraph.vertex,
-        directedGraph.edge,
-        directedGraph.tail,
-        directedGraph.head,
-        directedGraph.first,
-        directedGraph.adjList
-    );
+    this.directedGraph = directedGraph.copy();
     coloring = new Coloring(directedGraph.vertex);
   }
 
@@ -42,6 +35,10 @@ public class GraphColoring implements AlgorithmInterface<Coloring> {
     }
 
     return coloring;
+  }
+
+  @Override
+  public void preprocessing(int iteration) {
   }
 
   @Override
@@ -98,7 +95,7 @@ public class GraphColoring implements AlgorithmInterface<Coloring> {
   }
 
   @Override
-  public void update(final int iteration, final Coloring result) {
+  public void update(final Coloring result) {
     coloring = result.copy();
   }
 

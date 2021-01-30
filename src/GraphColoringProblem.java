@@ -19,7 +19,7 @@ public class GraphColoringProblem {
   private GraphColoringProblem() {
     CreateInterface problem;
     try {
-      problem = new Create(20, 0.20);
+      problem = new Create(20, 0.3);
     } catch (InvalidArgument invalidArgument) {
       invalidArgument.printStackTrace();
       return;
@@ -27,19 +27,28 @@ public class GraphColoringProblem {
 
     DirectedGraph directedGraph = problem.directedGraph();
     AlgorithmInterface<Coloring> gc = new GraphColoring(directedGraph);
-    LocalSearchInterface lsForGraphColoring = new LocalSearch<>(10000, 2000, gc);
+    LocalSearchInterface lsForGraphColoring = new LocalSearch<>(
+        10000,
+        2000,
+        gc
+    );
     lsForGraphColoring.go();
 
     System.out.println(gc.getResult());
-    System.out.println(gc.evaluate(gc.getResult()));
+    System.out.printf("evaluation value: %6.3f\n\n", gc.evaluate(gc.getResult()));
 
     AlgorithmInterface<Coordinate[]> fr = new FruchtermanReingold(directedGraph);
     LocalSearchInterface lsForFruchtermanReingold = new LocalSearch<>(
-        10000,
-        10000,
+        directedGraph.vertex * directedGraph.vertex + directedGraph.edge,
+        1,
         fr
     );
     lsForFruchtermanReingold.go();
+
+    System.out.println("coordinates");
+    for (Coordinate coordinate : fr.getResult()) {
+      System.out.println(coordinate);
+    }
 
     new Graph(directedGraph, fr.getResult(), gc.getResult());
   }
