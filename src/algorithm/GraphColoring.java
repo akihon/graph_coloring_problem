@@ -53,6 +53,14 @@ public class GraphColoring implements AlgorithmInterface<Coloring> {
 
   @Override
   public double evaluate(Coloring result) {
+    // V ... #vertexes in Graph
+    // SubGraph(c) ...  induced sub graph whose vertexes is color c.
+    // V_c ... #vertexes of SubGraph(c)
+    // E_c ... #edges of SubGraph(c)
+    // penalty_c = V_c * V_c + E_c
+    // penalty = sum(penalty_c) (c = 0, 1, 2, ..., result.color)
+    // eval = result.color + (penalty - V) / ALPHA
+
     int penalty = 0;
     ArrayList<Integer> checked = new ArrayList<>();
 

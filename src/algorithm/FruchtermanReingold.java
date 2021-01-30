@@ -92,6 +92,7 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
       }
     }
 
+    // attraction
     for (int e : directedGraph.getUndirectedGraphEdges()) {
       int v = directedGraph.tail[e];
       int u = directedGraph.head[e];
