@@ -8,6 +8,8 @@ package algorithm;
 public interface AlgorithmInterface<T> {
   T initialize();
 
+  void preprocessing(final int iteration);
+
   T algorithm(final int iteration);
 
   /**
@@ -19,7 +21,7 @@ public interface AlgorithmInterface<T> {
    */
   double evaluate(T result);
 
-  void update(final int iteration, final T result);
+  void update(final T result);
 
   T getResult();
 }

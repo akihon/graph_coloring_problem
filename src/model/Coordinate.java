@@ -4,8 +4,8 @@ package model;
  * Coordination express coordination.
  */
 public class Coordinate {
-  private final double coordinateX;
-  private final double coordinateY;
+  private double coordinateX;
+  private double coordinateY;
 
   /**
    * constructor.
@@ -13,7 +13,7 @@ public class Coordinate {
    * @param coordinateX double
    * @param coordinateY double
    */
-  public Coordinate(double coordinateX, double coordinateY) {
+  public Coordinate(final double coordinateX, final double coordinateY) {
     this.coordinateX = coordinateX;
     this.coordinateY = coordinateY;
   }
@@ -24,7 +24,7 @@ public class Coordinate {
    * @param c Coordinate
    * @return double
    */
-  public double distance(Coordinate c) {
+  public double distance(final Coordinate c) {
     double squareX = (coordinateX - c.getX()) * (coordinateX - c.getX());
     double squareY = (coordinateY - c.getY()) * (coordinateY - c.getY());
 
@@ -47,7 +47,7 @@ public class Coordinate {
    * @param c Coordinate
    * @return Coordinate (unit vector)
    */
-  public Coordinate calcDirectionUnitVector(Coordinate c) {
+  public Coordinate calcDirectionUnitVector(final Coordinate c) {
     double d = this.distance(c);
 
     if (d == 0) {
@@ -69,6 +69,20 @@ public class Coordinate {
    */
   public boolean equal(final Coordinate c, final double err) {
     return Math.abs(coordinateX - c.getX()) < err && Math.abs(coordinateY - c.getY()) < err;
+  }
+
+  public boolean isZeroVector(final double err) {
+    return this.equal(new Coordinate(0, 0), err);
+  }
+
+  public void add(final Coordinate c) {
+    coordinateX += c.getX();
+    coordinateY += c.getY();
+  }
+
+  public void sub(final Coordinate c) {
+    coordinateX -= c.getX();
+    coordinateY -= c.getY();
   }
 
   public double getX() {

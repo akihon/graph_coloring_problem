@@ -39,6 +39,8 @@ public class LocalSearch<T> implements LocalSearchInterface {
     while (improved && iteration++ < maxIteration) {
       int innerLoop = 0;
 
+      algo.preprocessing(iteration);
+
       while (innerLoop++ < maxInnerLoop) {
         T newResult = algo.algorithm(iteration);
         double newEval = algo.evaluate(newResult);
@@ -47,7 +49,7 @@ public class LocalSearch<T> implements LocalSearchInterface {
 
         if (improved) {
           eval = newEval;
-          algo.update(iteration, newResult);
+          algo.update(newResult);
           break;
         }
       }

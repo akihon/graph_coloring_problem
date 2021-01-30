@@ -46,17 +46,7 @@ public class DirectedGraph {
     setAdjacencyList();
   }
 
-  /**
-   * constructor (copy)
-   *
-   * @param vertex int
-   * @param edge int
-   * @param tail array of int
-   * @param head array of int
-   * @param first array of int
-   * @param adjList array of int
-   */
-  public DirectedGraph(
+  private DirectedGraph(
       final int vertex,
       final int edge,
       final int[] tail,
@@ -70,6 +60,19 @@ public class DirectedGraph {
     this.head = Arrays.copyOf(head, head.length);
     this.first = Arrays.copyOf(first, first.length);
     this.adjList = Arrays.copyOf(adjList, adjList.length);
+  }
+
+  public int[] getUndirectedGraphEdges() {
+    int[] edges = new int[edge / 2];
+    for (int e = 0; e < edge; e += 2) {
+      edges[e / 2] = e;
+    }
+
+    return edges;
+  }
+
+  public DirectedGraph copy() {
+    return new DirectedGraph(vertex, edge, tail, head, first, adjList);
   }
 
   @Override
@@ -93,7 +96,7 @@ public class DirectedGraph {
 
   private String toStringEdge() {
     StringBuilder stringBuilder = new StringBuilder("edge\n");
-    for (int e = 0; e < edge; e+=2) {
+    for (int e = 0; e < edge; e += 2) {
       stringBuilder.append(String.format("   %4d - %4d\n", tail[e], head[e]));
     }
 
