@@ -89,10 +89,12 @@ public class Graph extends JFrame {
     public void paintComponent(Graphics g) {
       super.paintComponent(g);
 
+      // background
       g.setColor(Color.WHITE);
       g.fillRect(0, 0, getWidth(), getHeight());
 
-      g.setColor(Color.BLACK);
+      // edge
+      g.setColor(Color.GRAY);
       for (int e = 0; e < directedGraph.edge; e += 2) {
         g.drawLine(
             (int) (coordinates[directedGraph.tail[e]].getX() * (getWidth() - 40) + 20),
@@ -102,12 +104,21 @@ public class Graph extends JFrame {
         );
       }
 
+      // vertex
       for (int v = 0; v < coordinates.length; v++) {
         if (coloring.color < colors.length) {
           g.setColor(colors[coloring.vertexColors[v]]);
         }
 
         g.fillOval(
+            (int) (coordinates[v].getX() * (getWidth() - 40)) - 7 + 20,
+            (int) (coordinates[v].getY() * (getHeight() - 40)) - 7 + 20,
+            14,
+            14
+        );
+
+        g.setColor(Color.BLACK);
+        g.drawOval(
             (int) (coordinates[v].getX() * (getWidth() - 40)) - 7 + 20,
             (int) (coordinates[v].getY() * (getHeight() - 40)) - 7 + 20,
             14,
