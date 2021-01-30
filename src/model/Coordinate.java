@@ -71,10 +71,6 @@ public class Coordinate {
     return Math.abs(coordinateX - c.getX()) < err && Math.abs(coordinateY - c.getY()) < err;
   }
 
-  public boolean isZeroVector(final double err) {
-    return this.equal(new Coordinate(0, 0), err);
-  }
-
   public void add(final Coordinate c) {
     coordinateX += c.getX();
     coordinateY += c.getY();

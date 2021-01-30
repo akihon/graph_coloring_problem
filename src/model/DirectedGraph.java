@@ -62,6 +62,11 @@ public class DirectedGraph {
     this.adjList = Arrays.copyOf(adjList, adjList.length);
   }
 
+  /**
+   * getUndirectedGraphEdges returns edge indexes of undirected graph.
+   *
+   * @return arrays of int
+   */
   public int[] getUndirectedGraphEdges() {
     int[] edges = new int[edge / 2];
     for (int e = 0; e < edge; e += 2) {
