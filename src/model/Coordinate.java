@@ -41,29 +41,9 @@ public class Coordinate {
   }
 
   /**
-   * calcDirectionUnitVector calc direction vector (unit).
-   * if this is A, argument is B, then direction vector returned this method is A -> B.
-   *
-   * @param c Coordinate
-   * @return Coordinate (unit vector)
-   */
-  public Coordinate calcDirectionUnitVector(final Coordinate c) {
-    double d = this.distance(c);
-
-    if (d == 0) {
-      return new Coordinate(0, 0);
-    }
-
-    return new Coordinate(
-        (c.getX() - coordinateX) / d,
-        (c.getY() - coordinateY) / d
-    );
-  }
-
-  /**
    * equal check the same coordinate of argument.
    *
-   * @param c Coordinate
+   * @param c   Coordinate
    * @param err double
    * @return boolean
    */

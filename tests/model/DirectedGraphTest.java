@@ -135,4 +135,77 @@ class DirectedGraphTest {
       }
     }
   }
+
+  @Test
+  public void TestGetUndirectedGraphEdges() {
+    class Input {
+      final int vertex;
+      final int edge;
+      final int[] tail;
+      final int[] head;
+
+      Input(
+          int vertex,
+          int edge,
+          int[] tail,
+          int[] head
+      ) {
+        this.vertex = vertex;
+        this.edge = edge;
+        this.tail = Arrays.copyOf(tail, tail.length);
+        this.head = Arrays.copyOf(head, head.length);
+      }
+    }
+    class TestCase {
+      final Input input;
+      final int[] want;
+
+      TestCase(Input input, int[] want) {
+        this.input = input;
+        this.want = want;
+      }
+    }
+
+    TestCase[] testCases = new TestCase[]{
+        // path
+        new TestCase(
+            new Input(3, 2, new int[]{0, 1}, new int[]{1, 2}),
+            new int[]{0, 2}
+        ),
+        // complete
+        new TestCase(
+            new Input(
+                4,
+                6,
+                new int[]{0, 0, 0, 1, 1, 2},
+                new int[]{1, 2, 3, 2, 3, 3}
+            ),
+            new int[]{0, 2, 4, 6, 8, 10}
+        ),
+        // general
+        // 0 - 1 - 2 - 6
+        //     |     /
+        //     3 - 4 - 5
+        new TestCase(
+            new Input(
+                7,
+                7,
+                new int[]{0, 1, 1, 2, 3, 4, 4},
+                new int[]{1, 2, 3, 6, 4, 5, 6}
+            ),
+            new int[]{0, 2, 4, 6, 8, 10, 12}
+        )
+    };
+
+    for (TestCase tc : testCases) {
+      int[] got = new DirectedGraph(
+          tc.input.vertex, tc.input.edge, tc.input.tail, tc.input.head
+      ).getUndirectedGraphEdges();
+
+      assertEquals(tc.want.length, got.length);
+      for (int i = 0; i < got.length; i++) {
+        assertEquals(tc.want[i], got[i]);
+      }
+    }
+  }
 }

@@ -124,52 +124,149 @@ class CoordinateTest {
   }
 
   @Test
-  public void TestCalcDirectionUnitVector() {
+  public void TestEqual() {
     class TestCase {
-      final Coordinate c1;
-      final Coordinate c2;
-      final Coordinate want;
+      final Coordinate in;
+      final Coordinate target;
+      final double err;
+      final boolean want;
 
-      TestCase(final Coordinate c1, final Coordinate c2, final Coordinate want) {
-        this.c1 = c1;
-        this.c2 = c2;
+      TestCase(Coordinate in, Coordinate target, double err, boolean want) {
+        this.in = in;
+        this.target = target;
+        this.err = err;
         this.want = want;
       }
     }
 
     TestCase[] testCases = new TestCase[]{
         new TestCase(
-            new Coordinate(1, 2),
-            new Coordinate(4, 6),
-            new Coordinate(0.6, 0.8)
+            new Coordinate(0, 0),
+            new Coordinate(1, 0),
+            1.1,
+            true
         ),
         new TestCase(
-            new Coordinate(-1, 0),
-            new Coordinate(11, 5),
-            new Coordinate(12 / 13.0, 5 / 13.0)
+            new Coordinate(0, 0),
+            new Coordinate(0, 1),
+            1.1,
+            true
         ),
         new TestCase(
-            new Coordinate(-1, -1),
-            new Coordinate(10, -1),
-            new Coordinate(1, 0)
+            new Coordinate(0, 0),
+            new Coordinate(0.1, 0),
+            0.09,
+            false
         ),
         new TestCase(
-            new Coordinate(-1, 10),
-            new Coordinate(-1, 4),
-            new Coordinate(0, -1)
+            new Coordinate(0, 0),
+            new Coordinate(0, 0.1),
+            0.09,
+            false
         ),
         new TestCase(
-            new Coordinate(-1, 1),
-            new Coordinate(-1, 1),
-            new Coordinate(0, 0)
+            new Coordinate(0, 0),
+            new Coordinate(1, 1),
+            1.4143,
+            true
+        ),
+        new TestCase(
+            new Coordinate(0, 0),
+            new Coordinate(1, 1),
+            1.4141,
+            true
         ),
     };
 
     for (TestCase tc : testCases) {
-      Coordinate got = tc.c1.calcDirectionUnitVector(tc.c2);
+      boolean got = tc.in.equal(tc.target, tc.err);
+      assertEquals(tc.want, got);
+    }
+  }
 
-      assertEquals(tc.want.getX(), got.getX());
-      assertEquals(tc.want.getY(), got.getY());
+  @Test
+  public void TestAdd() {
+    class TestCase {
+      final Coordinate in;
+      final Coordinate target;
+      final Coordinate want;
+
+      TestCase(Coordinate in, Coordinate target, Coordinate want) {
+        this.in = in;
+        this.target = target;
+        this.want = want;
+      }
+    }
+
+    TestCase[] testCases = new TestCase[]{
+        new TestCase(
+            new Coordinate(0, 0),
+            new Coordinate(1, 0),
+            new Coordinate(1, 0)
+        ),
+        new TestCase(
+            new Coordinate(0, 0),
+            new Coordinate(0, 1),
+            new Coordinate(0, 1)
+        ),
+        new TestCase(
+            new Coordinate(0, 0),
+            new Coordinate(0.1, 2.0),
+            new Coordinate(0.1, 2.0)
+        ),
+        new TestCase(
+            new Coordinate(-1.0, 3.0),
+            new Coordinate(2.0, 5.5),
+            new Coordinate(1.0, 8.5)
+        )
+    };
+
+    for (TestCase tc : testCases) {
+      tc.in.add(tc.target);
+      assertTrue(tc.in.equal(tc.want, 1.0e-9));
+    }
+  }
+
+  @Test
+  public void TestSub() {
+    class TestCase {
+      final Coordinate in;
+      final Coordinate target;
+      final Coordinate want;
+
+      TestCase(Coordinate in, Coordinate target, Coordinate want) {
+        this.in = in;
+        this.target = target;
+        this.want = want;
+      }
+    }
+
+    TestCase[] testCases = new TestCase[]{
+        new TestCase(
+            new Coordinate(0, 0),
+            new Coordinate(1, 0),
+            new Coordinate(-1, 0)
+        ),
+        new TestCase(
+            new Coordinate(0, 0),
+            new Coordinate(0, 1),
+            new Coordinate(0, -1)
+        ),
+        new TestCase(
+            new Coordinate(0, 0),
+            new Coordinate(0.1, 2.0),
+            new Coordinate(-0.1, -2.0)
+        ),
+        new TestCase(
+            new Coordinate(-1.0, 3.0),
+            new Coordinate(2.0, 5.5),
+            new Coordinate(-3.0, -2.5)
+        )
+    };
+
+    for (TestCase tc : testCases) {
+      tc.in.sub(tc.target);
+      assertTrue(tc.in.equal(tc.want, 1.0e-9));
     }
   }
 }
