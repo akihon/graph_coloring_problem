@@ -1,10 +1,12 @@
 package draw;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Graphics;
 import java.util.Arrays;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import model.Coloring;
 import model.Coordinate;
 import model.DirectedGraph;
@@ -15,9 +17,7 @@ import model.DirectedGraph;
 public class Graph extends JFrame {
   private static final int WIDTH = 800;
   private static final int HEIGHT = 600;
-  private final DirectedGraph directedGraph;
-  private final Coordinate[] coordinates;
-  private final Coloring coloring;
+  private final DrawPanel dp;
   private final Color[] colors = new Color[]{
       Color.RED,
       Color.GREEN,
@@ -32,57 +32,88 @@ public class Graph extends JFrame {
       Color.DARK_GRAY,
       Color.BLACK
     };
+  private final DirectedGraph directedGraph;
+  private Coordinate[] coordinates;
+  private Coloring coloring;
 
   /**
    * constructor.
    *
    * @param directedGraph model.DirectedGraph
-   * @param coordinates   array of model.Coordinate
-   * @param coloring      model.Coloring
+   * @param coordinates array of model.Coordinate
+   * @param coloring model.Coloring
    */
-  public Graph(DirectedGraph directedGraph, Coordinate[] coordinates, Coloring coloring) {
+  public Graph(
+      DirectedGraph directedGraph,
+      Coordinate[] coordinates,
+      Coloring coloring
+  ) {
     super("graph coloring");
-    setDefaultCloseOperation(EXIT_ON_CLOSE);
+    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setSize(WIDTH, HEIGHT);
     setLocationRelativeTo(null);
     setResizable(true);
 
-    Container container = getContentPane();
-    container.setBackground(Color.WHITE);
-
-    this.directedGraph = directedGraph;
+    this.directedGraph = directedGraph.copy();
     this.coordinates = Arrays.copyOf(coordinates, coordinates.length);
-    this.coloring = coloring;
+    this.coloring = coloring.copy();
 
-    this.setVisible(true);
+    dp = new DrawPanel();
+    add(dp, BorderLayout.CENTER);
+
+    setVisible(true);
   }
 
-  @Override
-  public void paint(Graphics g) {
-    super.paint(g);
+  /**
+   * draw is drawing again after updating coordinates and coloring.
+   *
+   * @param coordinates arrays of model.Coordinate
+   * @param coloring model.Coloring
+   */
+  public void draw(Coordinate[] coordinates, Coloring coloring) {
+    this.coordinates = Arrays.copyOf(coordinates, coordinates.length);
+    this.coloring = coloring.copy();
+    dp.repaint();
+    setVisible(true);
+  }
 
-    Graphics graphics = getContentPane().getGraphics();
+  /**
+   * DrawPanel define a panel.
+   */
+  public class DrawPanel extends JPanel {
+    /**
+     * paintComponent override.
+     *
+     * @param g Graphics
+     */
+    public void paintComponent(Graphics g) {
+      super.paintComponent(g);
 
-    for (int e = 0; e < directedGraph.edge; e += 2) {
-      graphics.drawLine(
-          (int) (coordinates[directedGraph.tail[e]].getX() * (Graph.WIDTH - 16) + 8),
-          (int) (coordinates[directedGraph.tail[e]].getY() * (Graph.HEIGHT - 16) + 8),
-          (int) (coordinates[directedGraph.head[e]].getX() * (Graph.WIDTH - 16) + 8),
-          (int) (coordinates[directedGraph.head[e]].getY() * (Graph.HEIGHT - 16) + 8)
-      );
-    }
+      g.setColor(Color.WHITE);
+      g.fillRect(0, 0, getWidth(), getHeight());
 
-    for (int v = 0; v < coordinates.length; v++) {
-      if (coloring.color < colors.length) {
-        graphics.setColor(colors[coloring.vertexColors[v]]);
+      g.setColor(Color.BLACK);
+      for (int e = 0; e < directedGraph.edge; e += 2) {
+        g.drawLine(
+            (int) (coordinates[directedGraph.tail[e]].getX() * (getWidth() - 40) + 20),
+            (int) (coordinates[directedGraph.tail[e]].getY() * (getHeight() - 40) + 20),
+            (int) (coordinates[directedGraph.head[e]].getX() * (getWidth() - 40) + 20),
+            (int) (coordinates[directedGraph.head[e]].getY() * (getHeight() - 40) + 20)
+        );
       }
 
-      graphics.fillOval(
-          (int) (coordinates[v].getX() * (Graph.WIDTH - 16)) - 7 + 8,
-          (int) (coordinates[v].getY() * (Graph.HEIGHT - 16)) - 7 + 8,
-          14,
-          14
-      );
+      for (int v = 0; v < coordinates.length; v++) {
+        if (coloring.color < colors.length) {
+          g.setColor(colors[coloring.vertexColors[v]]);
+        }
+
+        g.fillOval(
+            (int) (coordinates[v].getX() * (getWidth() - 40)) - 7 + 20,
+            (int) (coordinates[v].getY() * (getHeight() - 40)) - 7 + 20,
+            14,
+            14
+        );
+      }
     }
   }
 }
