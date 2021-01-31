@@ -95,7 +95,7 @@ public class Graph extends JFrame {
 
       // edge
       g.setColor(Color.GRAY);
-      for (int e = 0; e < graph.edge; e += 2) {
+      for (int e = 0; e < graph.edge; e ++) {
         g.drawLine(
             (int) (coordinates[graph.tail[e]].getX() * (getWidth() - 40) + 20),
             (int) (coordinates[graph.tail[e]].getY() * (getHeight() - 40) + 20),
