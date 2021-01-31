@@ -11,15 +11,11 @@ class CreateInterfaceTest {
     // basic
     {
       CreateInterface valid;
-      double[] dense = new double[]{0.0, 0.0001, 0.99999, 1.0000};
-
-      for (double dens : dense) {
-        try {
-          valid = new Create(1, dens);
-          assertEquals(String.format("vertex: 1, dense: %7.5f", dens), valid.toString());
-        } catch (InvalidArgument invalidArgument) {
-          assertEquals("", invalidArgument.getMessage());
-        }
+      try {
+        valid = new Create(1);
+        assertEquals("vertex: 1", valid.toString());
+      } catch (InvalidArgument invalidArgument) {
+        assertEquals("", invalidArgument.getMessage());
       }
     }
 
@@ -30,29 +26,11 @@ class CreateInterfaceTest {
 
       for (int vertex : vertexes) {
         try {
-          invalid = new Create(vertex, 0.1);
+          invalid = new Create(vertex);
           assertEquals("", invalid.toString());
         } catch (InvalidArgument invalidArgument) {
           assertEquals(
               "Invalid Argument : vertex is more than 0",
-              invalidArgument.getMessage()
-          );
-        }
-      }
-    }
-
-    // exception (dense)
-    {
-      CreateInterface invalid;
-      double[] dense = new double[]{-0.0001, 1.00001};
-
-      for (double dens : dense) {
-        try {
-          invalid = new Create(10, dens);
-          assertEquals("", invalid.toString());
-        } catch (InvalidArgument invalidArgument) {
-          assertEquals(
-              "Invalid Argument : dense is a number between 0 and 1",
               invalidArgument.getMessage()
           );
         }
@@ -94,8 +72,8 @@ class CreateInterfaceTest {
 
     for (TestCase tc : testCases) {
       try {
-        CreateInterface createInterface = new Create(tc.vertex, tc.dense);
-        UndirectedGraph got = createInterface.undirectedGraph();
+        CreateInterface createInterface = new Create(tc.vertex);
+        UndirectedGraph got = createInterface.randomNetwork(tc.dense);
 
         assertEquals(tc.want.vertex, got.vertex);
         assertEquals(tc.want.edge, got.edge);
@@ -110,6 +88,24 @@ class CreateInterfaceTest {
         }
       } catch (InvalidArgument invalidArgument) {
         assertEquals("", invalidArgument.getMessage());
+      }
+    }
+
+    // exception (dense)
+    {
+      CreateInterface invalid;
+      double[] dense = new double[]{-0.0001, 1.00001};
+
+      for (double dens : dense) {
+        try {
+          invalid = new Create(10);
+          invalid.randomNetwork(dens);
+        } catch (InvalidArgument invalidArgument) {
+          assertEquals(
+              "Invalid Argument : dense is a number between 0 and 1",
+              invalidArgument.getMessage()
+          );
+        }
       }
     }
   }

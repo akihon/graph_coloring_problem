@@ -10,6 +10,7 @@ import model.Coordinate;
 import model.UndirectedGraph;
 import problem.Create;
 import problem.CreateInterface;
+import problem.WattsStrogatzNetworkArgs;
 import utils.exceptions.InvalidArgument;
 
 public class GraphColoringProblem {
@@ -19,14 +20,18 @@ public class GraphColoringProblem {
 
   private GraphColoringProblem() {
     CreateInterface problem;
+    UndirectedGraph graph;
     try {
-      problem = new Create(50, 0.15);
+      problem = new Create(50);
+      //graph = problem.randomNetwork(0.15);
+
+      WattsStrogatzNetworkArgs args = new WattsStrogatzNetworkArgs(10, 0.05);
+      graph = problem.wattsStrogatzNetwork(args);
     } catch (InvalidArgument invalidArgument) {
       invalidArgument.printStackTrace();
       return;
     }
 
-    UndirectedGraph graph = problem.undirectedGraph();
     AlgorithmInterface<Coloring> gc = new GraphColoring(graph);
     //LocalSearchInterface lsForGraphColoring = new LocalSearch<>(
     //    10000,
