@@ -1,15 +1,18 @@
 package localsearch;
 
 import algorithm.AlgorithmInterface;
+import utils.logger.Logger;
 
 /**
  * LocalSearch implements local search algorithm.
  * T is type of result.
  */
 public class LocalSearch<T> implements LocalSearchInterface {
-  final int maxIteration;
-  final int maxInnerLoop;
-  final AlgorithmInterface<T> algo;
+  private final int maxIteration;
+  private final int maxInnerLoop;
+  private final AlgorithmInterface<T> algo;
+  private final Logger logger;
+
 
   /**
    * constructor.
@@ -26,6 +29,7 @@ public class LocalSearch<T> implements LocalSearchInterface {
     this.maxIteration = maxIteration;
     this.maxInnerLoop = maxInnerLoop;
     this.algo = algo;
+    logger = new Logger(LocalSearch.class.getName(), null, true);
   }
 
   @Override
@@ -35,6 +39,14 @@ public class LocalSearch<T> implements LocalSearchInterface {
 
     T result = algo.initialize();
     double eval = algo.evaluate(result);
+
+    logger.logger.info(
+        String.format(
+            "\nstart !\n" +
+                "initial evaluation value : %16.5f",
+           eval
+        )
+    );
 
     while (improved && iteration++ < maxIteration) {
       int innerLoop = 0;
@@ -53,6 +65,19 @@ public class LocalSearch<T> implements LocalSearchInterface {
           break;
         }
       }
+
+      logger.logger.config(
+          String.format(
+              "\n   iteration           : %10d\n" +
+                  "   evaluate value      : %16.5f\n" +
+                  "   improve             : %b\n\n",
+              iteration, eval, improved
+          )
+      );
     }
+
+    logger.logger.info(
+        String.format("\nfinish !\nevaluation value : %16.5f", eval)
+    );
   }
 }

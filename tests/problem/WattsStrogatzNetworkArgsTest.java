@@ -1,7 +1,6 @@
 package problem;
 
 import org.junit.jupiter.api.Test;
-import utils.exceptions.InvalidArgument;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WattsStrogatzNetworkArgsTest {
@@ -72,28 +71,25 @@ class WattsStrogatzNetworkArgsTest {
         ),
         new TestCase(
             new WattsStrogatzNetworkArgs(6, -0.1),
-            "Invalid Argument : beta is less than 0.0"
+            "problem.WattsStrogatzNetworkArgs : beta is less than 0.0"
         ),
         new TestCase(
             new WattsStrogatzNetworkArgs(6, 1.1),
-            "Invalid Argument : beta is more than 1.0"
+            "problem.WattsStrogatzNetworkArgs : beta is more than 1.0"
         ),
         new TestCase(
             new WattsStrogatzNetworkArgs(5, 0.5),
-            "Invalid Argument : degree is less than log_2(vertex) (  5.00000)"
+            "problem.WattsStrogatzNetworkArgs : degree is less than log_2(vertex) (  5.00000)"
         ),
         new TestCase(
             new WattsStrogatzNetworkArgs(32, 0.5),
-            "Invalid Argument : degree is more than vertex (32)"
+            "problem.WattsStrogatzNetworkArgs : degree is more than vertex (32)"
         )
     };
 
     for (TestCase tc : testCases) {
-      try {
-        tc.in.valid(32);
-      } catch (InvalidArgument e) {
-        assertEquals(tc.want, e.getMessage());
-      }
+      String got = tc.in.valid(32);
+      assertEquals(tc.want, got);
     }
   }
 }

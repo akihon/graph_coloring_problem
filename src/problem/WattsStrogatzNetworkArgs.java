@@ -14,26 +14,45 @@ public class WattsStrogatzNetworkArgs {
     this.beta = beta;
   }
 
-  void valid(final int vertex) throws InvalidArgument {
+  String valid(final int vertex) {
     if (degree >= vertex) {
-      throw new InvalidArgument(String.format("degree is more than vertex (%d)", vertex));
+      return String.format(
+          "%s : degree is more than vertex (%d)",
+          WattsStrogatzNetworkArgs.class.getName(),
+          vertex
+      );
     }
 
     double log2V = Math.log(vertex) / Math.log(2);
     if (degree <= log2V) {
-      throw new InvalidArgument(String.format("degree is less than log_2(vertex) (%9.5f)", log2V));
+      return String.format(
+          "%s : degree is less than log_2(vertex) (%9.5f)",
+          WattsStrogatzNetworkArgs.class.getName(),
+          log2V
+      );
     }
 
     if (degree % 2 != 0) {
-      throw new InvalidArgument("degree is not even");
+      return String.format(
+          "%s : degree is not even",
+          WattsStrogatzNetworkArgs.class.getName()
+      );
     }
 
     if (beta < 0.0) {
-      throw new InvalidArgument("beta is less than 0.0");
+      return String.format(
+          "%s : beta is less than 0.0",
+          WattsStrogatzNetworkArgs.class.getName()
+      );
     }
 
     if (beta > 1.0) {
-      throw new InvalidArgument("beta is more than 1.0");
+      return String.format(
+          "%s : beta is more than 1.0",
+          WattsStrogatzNetworkArgs.class.getName()
+      );
     }
+
+    return "";
   }
 }

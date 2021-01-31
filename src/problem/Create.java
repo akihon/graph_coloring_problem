@@ -5,6 +5,7 @@ import java.util.Random;
 import model.UndirectedGraph;
 import utils.exceptions.InvalidArgument;
 import utils.exceptions.OccurredBug;
+import utils.logger.Logger;
 
 /**
  * Create graph coloring problem.
@@ -12,6 +13,7 @@ import utils.exceptions.OccurredBug;
 public class Create implements CreateInterface {
   private final int vertex;  // vertex > 0
   private final Random random;
+  private final Logger logger;
 
   /**
    * constructor.
@@ -27,12 +29,15 @@ public class Create implements CreateInterface {
 
     this.vertex = vertex;
     random = new Random(System.currentTimeMillis());
+    logger = new Logger(Create.class.getName(), null, true);
   }
 
   @Override
   public UndirectedGraph randomNetwork(final double dense) throws InvalidArgument {
     if (dense < 0.0 || dense > 1.0) {
-      throw new InvalidArgument("dense is a number between 0 and 1");
+      throw new InvalidArgument(
+          String.format("%s : dense is a number between 0 and 1", Create.class.getName())
+      );
     }
 
     int edge = 0;
@@ -49,6 +54,9 @@ public class Create implements CreateInterface {
       }
     }
 
+    logger.logger.info(
+        String.format("created undirected graph (vertex : %d, edge : %d)", vertex, edge)
+    );
     return new UndirectedGraph(vertex, edge, tail, head);
   }
 
@@ -56,7 +64,12 @@ public class Create implements CreateInterface {
   public UndirectedGraph wattsStrogatzNetwork(
       WattsStrogatzNetworkArgs args
   ) throws InvalidArgument, OccurredBug {
-    args.valid(vertex);
+    String argsMsg = args.valid(vertex);
+    if (!argsMsg.equals("")) {
+      throw new InvalidArgument(
+          String.format("%s : %s", Create.class.getName(), argsMsg)
+      );
+    }
 
     int mod = vertex - 1 - args.degree / 2;
     int edge = 0;
@@ -111,7 +124,11 @@ public class Create implements CreateInterface {
         }
 
         if (edgeIndex == -1) {
-          throw new OccurredBug(String.format("no edge (%d - %d)", v, modU));
+          String msg = String.format(
+              "%s : no edge (%d - %d)", Create.class.getName(), v, modU
+          );
+          logger.logger.severe(msg);
+          throw new OccurredBug(msg);
         }
 
         int k = random.nextInt(vertex);
@@ -127,6 +144,9 @@ public class Create implements CreateInterface {
       }
     }
 
+    logger.logger.info(
+        String.format("created undirected graph (vertex : %d, edge : %d)", vertex, edge)
+    );
     return new UndirectedGraph(vertex, edge, tail, head);
   }
 

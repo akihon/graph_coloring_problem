@@ -103,7 +103,7 @@ class CreateTest {
           invalid.randomNetwork(dens);
         } catch (InvalidArgument invalidArgument) {
           assertEquals(
-              "Invalid Argument : dense is a number between 0 and 1",
+              "Invalid Argument : problem.Create : dense is a number between 0 and 1",
               invalidArgument.getMessage()
           );
         }

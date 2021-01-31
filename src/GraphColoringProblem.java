@@ -33,7 +33,6 @@ public class GraphColoringProblem {
       return;
     }
 
-
     AlgorithmInterface<Coloring> gc = new GraphColoring(graph);
     //LocalSearchInterface lsForGraphColoring = new LocalSearch<>(
     //    10000,
