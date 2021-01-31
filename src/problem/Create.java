@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import model.UndirectedGraph;
 import utils.exceptions.InvalidArgument;
+import utils.exceptions.OccurredBug;
 
 /**
  * Create graph coloring problem.
@@ -14,7 +15,7 @@ public class Create implements CreateInterface {
 
   /**
    * constructor.
-   * If dense is less than 0 or more than 1, throw an InvalidArgument exception.
+   * if vertex is less than 1, throw invalid argument exception.
    *
    * @param vertex int
    * @throws InvalidArgument invalid argument exception
@@ -54,7 +55,7 @@ public class Create implements CreateInterface {
   @Override
   public UndirectedGraph wattsStrogatzNetwork(
       WattsStrogatzNetworkArgs args
-  ) throws InvalidArgument {
+  ) throws InvalidArgument, OccurredBug {
     args.valid(vertex);
 
     int mod = vertex - 1 - args.degree / 2;
@@ -110,8 +111,7 @@ public class Create implements CreateInterface {
         }
 
         if (edgeIndex == -1) {
-          // TODO
-          System.out.printf("v = %d, u = %d (%d), e = %d\n", v, u, modU, edgeIndex);
+          throw new OccurredBug(String.format("no edge (%d - %d)", v, modU));
         }
 
         int k = random.nextInt(vertex);

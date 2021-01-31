@@ -2,6 +2,7 @@ package problem;
 
 import model.UndirectedGraph;
 import utils.exceptions.InvalidArgument;
+import utils.exceptions.OccurredBug;
 
 /**
  * CreateInterface is repository regarding create graph coloring problem.
@@ -23,6 +24,9 @@ public interface CreateInterface {
    * @param args WattsStrogatzNetworkArgs
    * @return model.UndirectedGraph
    * @throws InvalidArgument invalid argument exception
+   * @throws OccurredBug     internal error exception
    */
-  UndirectedGraph wattsStrogatzNetwork(WattsStrogatzNetworkArgs args) throws InvalidArgument;
+  UndirectedGraph wattsStrogatzNetwork(
+      WattsStrogatzNetworkArgs args
+  ) throws InvalidArgument, OccurredBug;
 }

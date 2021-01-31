@@ -3,9 +3,10 @@ package problem;
 import model.UndirectedGraph;
 import org.junit.jupiter.api.Test;
 import utils.exceptions.InvalidArgument;
+import utils.exceptions.OccurredBug;
 import static org.junit.jupiter.api.Assertions.*;
 
-class CreateInterfaceTest {
+class CreateTest {
   @Test
   public void TestCreate() {
     // basic
@@ -39,7 +40,7 @@ class CreateInterfaceTest {
   }
 
   @Test
-  public void TestUndirectedGraph() {
+  public void TestRandomNetwork() {
     class TestCase {
       final int vertex;
       final double dense;
@@ -106,6 +107,20 @@ class CreateInterfaceTest {
               invalidArgument.getMessage()
           );
         }
+      }
+    }
+  }
+
+  @Test
+  public void TestWattsStrogatzNetwork() {
+    // test that this method does not throw exceptions.
+    for (int i = 0; i < 20; i++) {
+      try {
+        CreateInterface create = new Create(128);
+        WattsStrogatzNetworkArgs args = new WattsStrogatzNetworkArgs(10, 0.5);
+        create.wattsStrogatzNetwork(args);
+      } catch (InvalidArgument | OccurredBug e) {
+        assertEquals("", e.getMessage());
       }
     }
   }

@@ -12,6 +12,7 @@ import problem.Create;
 import problem.CreateInterface;
 import problem.WattsStrogatzNetworkArgs;
 import utils.exceptions.InvalidArgument;
+import utils.exceptions.OccurredBug;
 
 public class GraphColoringProblem {
   public static void main(String[] args) {
@@ -27,10 +28,11 @@ public class GraphColoringProblem {
 
       WattsStrogatzNetworkArgs args = new WattsStrogatzNetworkArgs(10, 0.05);
       graph = problem.wattsStrogatzNetwork(args);
-    } catch (InvalidArgument invalidArgument) {
-      invalidArgument.printStackTrace();
+    } catch (InvalidArgument | OccurredBug e) {
+      e.printStackTrace();
       return;
     }
+
 
     AlgorithmInterface<Coloring> gc = new GraphColoring(graph);
     //LocalSearchInterface lsForGraphColoring = new LocalSearch<>(
