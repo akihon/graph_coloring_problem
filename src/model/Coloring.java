@@ -35,13 +35,13 @@ public class Coloring {
   /**
    * isFeasible return the feasible solution or not.
    *
-   * @param directedGraph model.DirectedGraph
+   * @param graph model.UndirectedGraph
    * @return boolean
    */
-  public boolean isFeasible(final DirectedGraph directedGraph) {
-    for (int e : directedGraph.getUndirectedGraphEdges()) {
-      int t = directedGraph.tail[e];
-      int h = directedGraph.head[e];
+  public boolean isFeasible(final UndirectedGraph graph) {
+    for (int e = 0; e < graph.edge; e++) {
+      int t = graph.tail[e];
+      int h = graph.head[e];
 
       if (vertexColors[t] == vertexColors[h]) {
         return false;
