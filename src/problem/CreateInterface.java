@@ -1,15 +1,15 @@
 package problem;
 
-import model.DirectedGraph;
+import model.UndirectedGraph;
 
 /**
  * CreateInterface is repository regarding create graph coloring problem.
  */
 public interface CreateInterface {
   /**
-   * DirectedGraph create directed graph.
+   * UndirectedGraph create undirected graph.
    *
-   * @return model.DirectedGraph
+   * @return model.UndirectedGraph
    */
-  DirectedGraph directedGraph();
+  UndirectedGraph undirectedGraph();
 }

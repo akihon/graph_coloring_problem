@@ -1,11 +1,9 @@
 package algorithm;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Random;
 import model.Coloring;
-import model.DirectedGraph;
+import model.UndirectedGraph;
 
 /**
  * GraphColoring solve graph coloring problem.
@@ -13,24 +11,24 @@ import model.DirectedGraph;
 public class GraphColoring implements AlgorithmInterface<Coloring> {
   private static final double ALPHA = 2.0;
 
-  private final DirectedGraph directedGraph;
+  private final UndirectedGraph graph;
   private Coloring coloring;
   private final Random random = new Random(System.currentTimeMillis());
 
   /**
    * constructor.
    *
-   * @param directedGraph model.DirectedGraph
+   * @param graph model.UndirectedGraph
    */
-  public GraphColoring(final DirectedGraph directedGraph) {
-    this.directedGraph = directedGraph.copy();
-    coloring = new Coloring(directedGraph.vertex);
+  public GraphColoring(final UndirectedGraph graph) {
+    this.graph = graph.copy();
+    coloring = new Coloring(graph.vertex);
   }
 
   @Override
   public Coloring initialize() {
-    coloring.color = directedGraph.vertex;
-    for (int v = 0; v < directedGraph.vertex; v++) {
+    coloring.color = graph.vertex;
+    for (int v = 0; v < graph.vertex; v++) {
       coloring.vertexColors[v] = v;
     }
 
@@ -61,45 +59,57 @@ public class GraphColoring implements AlgorithmInterface<Coloring> {
     // penalty = sum(penalty_c) (c = 0, 1, 2, ..., result.color)
     // eval = result.color + (penalty - V) / ALPHA
 
-    int penalty = 0;
-    ArrayList<Integer> checked = new ArrayList<>();
+    int[] parent = new int[graph.vertex];
+    int[] subgraphVertexes = new int[graph.vertex];
+    int[] subgraphEdges = new int[graph.vertex];
 
-    for (int v = 0; v < directedGraph.vertex; v++) {
-      if (checked.contains(v)) {
+    for (int v = 0; v < parent.length; v++) {
+      parent[v] = v;
+      subgraphVertexes[v] = 1;
+      subgraphEdges[v] = 0;
+    }
+
+    for (int e = 0; e < graph.edge; e++) {
+      int t = graph.tail[e];
+      int h = graph.head[e];
+
+      if (result.vertexColors[t] != result.vertexColors[h]) {
         continue;
       }
 
-      int color = result.vertexColors[v];
-      int subGraphVertexes = 0;
-      int subGraphEdges = 0;
-      LinkedList<Integer> ll = new LinkedList<>(Collections.singletonList(v));
+      int ph = find(h, parent);
+      int pt = find(t, parent);
 
-      while (ll.size() > 0) {
-        int vv = ll.poll();
-        int e = directedGraph.first[vv];
-        checked.add(vv);
-        subGraphVertexes++;
-
-        while (e > -1) {
-          int headVertex = directedGraph.head[e];
-
-          if (result.vertexColors[headVertex] == color) {
-            if (!checked.contains(headVertex) && !ll.contains(headVertex)) {
-              ll.addLast(directedGraph.head[e]);
-              subGraphEdges++;
-            } else if (ll.contains(headVertex)) {
-              subGraphEdges++;
-            }
-          }
-
-          e = directedGraph.adjList[e];
-        }
+      if (pt == ph) {
+        subgraphEdges[pt]++;
+        continue;
       }
 
-      penalty += subGraphVertexes * subGraphVertexes + subGraphEdges;
+      if (subgraphVertexes[pt] > subgraphVertexes[ph]) {
+        parent[ph] = pt;
+        subgraphVertexes[pt] += subgraphVertexes[ph];
+        subgraphEdges[pt] += subgraphEdges[ph] + 1;
+      } else {
+        parent[pt] = ph;
+        subgraphVertexes[ph] += subgraphVertexes[pt];
+        subgraphEdges[ph] += subgraphEdges[pt] + 1;
+      }
     }
 
-    return result.color + (double) (penalty - directedGraph.vertex) / ALPHA;
+    int penalty = 0;
+    ArrayList<Integer> checked = new ArrayList<>();
+    for (int p : parent) {
+      int root = find(p, parent);
+
+      if (checked.contains(root) || subgraphVertexes[root] == 1) {
+        continue;
+      }
+
+      checked.add(root);
+      penalty += subgraphVertexes[root] * subgraphVertexes[root] + subgraphEdges[root];
+    }
+
+    return result.color + (double) penalty / ALPHA;
   }
 
   @Override
@@ -115,12 +125,12 @@ public class GraphColoring implements AlgorithmInterface<Coloring> {
   private Coloring swapStrategy() {
     Coloring coloring = this.coloring.copy();
 
-    int t = random.nextInt(directedGraph.vertex);
-    int h = random.nextInt(directedGraph.vertex);
+    int t = random.nextInt(graph.vertex);
+    int h = random.nextInt(graph.vertex);
 
     while (t == h) {
-      t = random.nextInt(directedGraph.vertex);
-      h = random.nextInt(directedGraph.vertex);
+      t = random.nextInt(graph.vertex);
+      h = random.nextInt(graph.vertex);
     }
 
     coloring.swapVertexColors(t, h);
@@ -135,12 +145,21 @@ public class GraphColoring implements AlgorithmInterface<Coloring> {
       return coloring;
     }
 
-    int v = random.nextInt(directedGraph.vertex);
+    int v = random.nextInt(graph.vertex);
     int c = random.nextInt(coloring.color - 1);
 
     coloring.vertexColors[v] = c;
     coloring.updateColor();
 
     return coloring;
+  }
+
+  private int find(final int p, final int[] parent) {
+    int root = p;
+    while (root != parent[root]) {
+      root = parent[root];
+    }
+
+    return root;
   }
 }

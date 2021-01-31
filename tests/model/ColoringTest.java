@@ -60,7 +60,7 @@ class ColoringTest {
     // 0 - 1 - 2 - 6
     //     |     /
     //     3 - 4 - 5
-    DirectedGraph directedGraph = new DirectedGraph(
+    UndirectedGraph graph = new UndirectedGraph(
         7,
         7,
         new int[]{0, 1, 1, 2, 3, 4, 4},
@@ -101,9 +101,9 @@ class ColoringTest {
     };
 
     for (TestCase tc : testCases) {
-      Coloring coloring = new Coloring(directedGraph.vertex);
+      Coloring coloring = new Coloring(graph.vertex);
       coloring.vertexColors = tc.in;
-      assertEquals(tc.want, coloring.isFeasible(directedGraph));
+      assertEquals(tc.want, coloring.isFeasible(graph));
     }
   }
 
@@ -113,7 +113,7 @@ class ColoringTest {
     // 0 - 1 - 2 - 6
     //     |     /
     //     3 - 4 - 5
-    DirectedGraph directedGraph = new DirectedGraph(
+    UndirectedGraph graph = new UndirectedGraph(
         7,
         7,
         new int[]{0, 1, 1, 2, 3, 4, 4},
@@ -154,7 +154,7 @@ class ColoringTest {
     };
 
     for (TestCase tc : testCases) {
-      Coloring coloring = new Coloring(directedGraph.vertex);
+      Coloring coloring = new Coloring(graph.vertex);
       coloring.vertexColors = tc.in;
       coloring.updateColor();
       assertEquals(tc.want, coloring.color);

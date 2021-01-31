@@ -7,7 +7,7 @@ import localsearch.LocalSearch;
 import localsearch.LocalSearchInterface;
 import model.Coloring;
 import model.Coordinate;
-import model.DirectedGraph;
+import model.UndirectedGraph;
 import problem.Create;
 import problem.CreateInterface;
 import utils.exceptions.InvalidArgument;
@@ -26,8 +26,8 @@ public class GraphColoringProblem {
       return;
     }
 
-    DirectedGraph directedGraph = problem.directedGraph();
-    AlgorithmInterface<Coloring> gc = new GraphColoring(directedGraph);
+    UndirectedGraph graph = problem.undirectedGraph();
+    AlgorithmInterface<Coloring> gc = new GraphColoring(graph);
     //LocalSearchInterface lsForGraphColoring = new LocalSearch<>(
     //    10000,
     //    2000,
@@ -41,12 +41,12 @@ public class GraphColoringProblem {
     lsForGraphColoring.go();
 
     System.out.println(gc.getResult());
-    System.out.printf("feasible : %b\n", gc.getResult().isFeasible(directedGraph));
+    System.out.printf("feasible : %b\n", gc.getResult().isFeasible(graph));
     System.out.printf("evaluation value: %6.3f\n\n", gc.evaluate(gc.getResult()));
 
-    AlgorithmInterface<Coordinate[]> fr = new FruchtermanReingold(directedGraph);
+    AlgorithmInterface<Coordinate[]> fr = new FruchtermanReingold(graph);
     LocalSearchInterface lsForFruchtermanReingold = new LocalSearch<>(
-        directedGraph.vertex * directedGraph.vertex + directedGraph.edge,
+        graph.vertex * graph.vertex + graph.edge,
         1,
         fr
     );
@@ -57,6 +57,6 @@ public class GraphColoringProblem {
     //  System.out.println(coordinate);
     //}
 
-    new Graph(directedGraph, fr.getResult(), gc.getResult());
+    new Graph(graph, fr.getResult(), gc.getResult());
   }
 }

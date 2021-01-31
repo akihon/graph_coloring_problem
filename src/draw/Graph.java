@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import model.Coloring;
 import model.Coordinate;
-import model.DirectedGraph;
+import model.UndirectedGraph;
 
 /**
  * Graph draw a graph.
@@ -31,20 +31,20 @@ public class Graph extends JFrame {
       Color.LIGHT_GRAY,
       Color.DARK_GRAY,
       Color.BLACK
-    };
-  private final DirectedGraph directedGraph;
+  };
+  private final UndirectedGraph graph;
   private Coordinate[] coordinates;
   private Coloring coloring;
 
   /**
    * constructor.
    *
-   * @param directedGraph model.DirectedGraph
+   * @param graph       model.UndirectedGraph
    * @param coordinates array of model.Coordinate
-   * @param coloring model.Coloring
+   * @param coloring    model.Coloring
    */
   public Graph(
-      DirectedGraph directedGraph,
+      UndirectedGraph graph,
       Coordinate[] coordinates,
       Coloring coloring
   ) {
@@ -54,7 +54,7 @@ public class Graph extends JFrame {
     setLocationRelativeTo(null);
     setResizable(true);
 
-    this.directedGraph = directedGraph.copy();
+    this.graph = graph.copy();
     this.coordinates = Arrays.copyOf(coordinates, coordinates.length);
     this.coloring = coloring.copy();
 
@@ -68,7 +68,7 @@ public class Graph extends JFrame {
    * draw is drawing again after updating coordinates and coloring.
    *
    * @param coordinates arrays of model.Coordinate
-   * @param coloring model.Coloring
+   * @param coloring    model.Coloring
    */
   public void draw(Coordinate[] coordinates, Coloring coloring) {
     this.coordinates = Arrays.copyOf(coordinates, coordinates.length);
@@ -95,12 +95,12 @@ public class Graph extends JFrame {
 
       // edge
       g.setColor(Color.GRAY);
-      for (int e = 0; e < directedGraph.edge; e += 2) {
+      for (int e = 0; e < graph.edge; e += 2) {
         g.drawLine(
-            (int) (coordinates[directedGraph.tail[e]].getX() * (getWidth() - 40) + 20),
-            (int) (coordinates[directedGraph.tail[e]].getY() * (getHeight() - 40) + 20),
-            (int) (coordinates[directedGraph.head[e]].getX() * (getWidth() - 40) + 20),
-            (int) (coordinates[directedGraph.head[e]].getY() * (getHeight() - 40) + 20)
+            (int) (coordinates[graph.tail[e]].getX() * (getWidth() - 40) + 20),
+            (int) (coordinates[graph.tail[e]].getY() * (getHeight() - 40) + 20),
+            (int) (coordinates[graph.head[e]].getX() * (getWidth() - 40) + 20),
+            (int) (coordinates[graph.head[e]].getY() * (getHeight() - 40) + 20)
         );
       }
 

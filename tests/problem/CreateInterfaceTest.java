@@ -1,13 +1,13 @@
 package problem;
 
-import model.DirectedGraph;
+import model.UndirectedGraph;
 import org.junit.jupiter.api.Test;
 import utils.exceptions.InvalidArgument;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CreateInterfaceTest {
   @Test
-  public void TestCreate_Create() {
+  public void TestCreate() {
     // basic
     {
       CreateInterface valid;
@@ -61,13 +61,13 @@ class CreateInterfaceTest {
   }
 
   @Test
-  public void TestCreate_directionGraph() {
+  public void TestUndirectedGraph() {
     class TestCase {
       final int vertex;
       final double dense;
-      final DirectedGraph want;
+      final UndirectedGraph want;
 
-      TestCase(int vertex, double dense, DirectedGraph want) {
+      TestCase(final int vertex, final double dense, final UndirectedGraph want) {
         this.vertex = vertex;
         this.dense = dense;
         this.want = want;
@@ -78,12 +78,12 @@ class CreateInterfaceTest {
         new TestCase(
             4,
             0.0,
-            new DirectedGraph(4, 0, new int[]{}, new int[]{})
+            new UndirectedGraph(4, 0, new int[]{}, new int[]{})
         ),
         new TestCase(
             4,
             1.0,
-            new DirectedGraph(
+            new UndirectedGraph(
                 4,
                 6,
                 new int[]{0, 0, 0, 1, 1, 2},
@@ -95,26 +95,18 @@ class CreateInterfaceTest {
     for (TestCase tc : testCases) {
       try {
         CreateInterface createInterface = new Create(tc.vertex, tc.dense);
-        DirectedGraph got = createInterface.directedGraph();
+        UndirectedGraph got = createInterface.undirectedGraph();
 
         assertEquals(tc.want.vertex, got.vertex);
         assertEquals(tc.want.edge, got.edge);
         assertEquals(tc.want.tail.length, got.tail.length);
         assertEquals(tc.want.head.length, got.head.length);
-        assertEquals(tc.want.first.length, got.first.length);
-        assertEquals(tc.want.adjList.length, got.adjList.length);
 
         for (int i = 0; i < got.tail.length; i++) {
           assertEquals(tc.want.tail[i], got.tail[i]);
         }
         for (int i = 0; i < got.head.length; i++) {
           assertEquals(tc.want.head[i], got.head[i]);
-        }
-        for (int i = 0; i < got.first.length; i++) {
-          assertEquals(tc.want.first[i], got.first[i]);
-        }
-        for (int i = 0; i < got.adjList.length; i++) {
-          assertEquals(tc.want.adjList[i], got.adjList[i]);
         }
       } catch (InvalidArgument invalidArgument) {
         assertEquals("", invalidArgument.getMessage());

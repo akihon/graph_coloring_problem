@@ -1,7 +1,7 @@
 package problem;
 
 import java.util.Random;
-import model.DirectedGraph;
+import model.UndirectedGraph;
 import utils.exceptions.InvalidArgument;
 
 /**
@@ -33,7 +33,7 @@ public class Create implements CreateInterface {
   }
 
   @Override
-  public DirectedGraph directedGraph() {
+  public UndirectedGraph undirectedGraph() {
     int edge = 0;
     int[] tail = new int[vertex * (vertex - 1) / 2];
     int[] head = new int[vertex * (vertex - 1) / 2];
@@ -49,7 +49,7 @@ public class Create implements CreateInterface {
       }
     }
 
-    return new DirectedGraph(vertex, edge, tail, head);
+    return new UndirectedGraph(vertex, edge, tail, head);
   }
 
   @Override

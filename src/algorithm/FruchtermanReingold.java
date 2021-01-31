@@ -2,7 +2,7 @@ package algorithm;
 
 import java.util.Random;
 import model.Coordinate;
-import model.DirectedGraph;
+import model.UndirectedGraph;
 
 /**
  * FruchtermanReingold implements Fruchterman-Reingold algorithm.
@@ -13,25 +13,25 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
 
   private double temperature;
   private final double constant;
-  private final DirectedGraph directedGraph;
+  private final UndirectedGraph graph;
   private final Coordinate[] coordinates;
   private final Random random = new Random(System.currentTimeMillis());
 
   /**
    * constructor.
    *
-   * @param directedGraph model.DirectedGraph
+   * @param graph model.UndirectedGraph
    */
-  public FruchtermanReingold(final DirectedGraph directedGraph) {
-    constant = Math.sqrt(1.0 / directedGraph.vertex);
-    this.directedGraph = directedGraph.copy();
+  public FruchtermanReingold(final UndirectedGraph graph) {
+    constant = Math.sqrt(1.0 / graph.vertex);
+    this.graph = graph.copy();
 
-    coordinates = new Coordinate[directedGraph.vertex];
+    coordinates = new Coordinate[graph.vertex];
   }
 
   @Override
   public Coordinate[] initialize() {
-    for (int v = 0; v < directedGraph.vertex; v++) {
+    for (int v = 0; v < graph.vertex; v++) {
       boolean isSame = true;
 
       while (isSame) {
@@ -66,13 +66,13 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
 
   @Override
   public Coordinate[] algorithm(final int iteration) {
-    Coordinate[] forceVectors = new Coordinate[directedGraph.vertex];
+    Coordinate[] forceVectors = new Coordinate[graph.vertex];
 
     // repulsive forces
-    for (int v = 0; v < directedGraph.vertex; v++) {
+    for (int v = 0; v < graph.vertex; v++) {
       forceVectors[v] = new Coordinate(0, 0);
 
-      for (int u = 0; u < directedGraph.vertex; u++) {
+      for (int u = 0; u < graph.vertex; u++) {
         if (v == u) {
           continue;
         }
@@ -93,9 +93,9 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
     }
 
     // attraction
-    for (int e : directedGraph.getUndirectedGraphEdges()) {
-      int v = directedGraph.tail[e];
-      int u = directedGraph.head[e];
+    for (int e = 0; e < graph.edge; e++) {
+      int v = graph.tail[e];
+      int u = graph.head[e];
       Coordinate delta = new Coordinate(
           coordinates[v].getX() - coordinates[u].getX(),
           coordinates[v].getY() - coordinates[u].getY()
@@ -117,8 +117,8 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
     }
 
     // update coordinates
-    Coordinate[] updated = new Coordinate[directedGraph.vertex];
-    for (int v = 0; v < directedGraph.vertex; v++) {
+    Coordinate[] updated = new Coordinate[graph.vertex];
+    for (int v = 0; v < graph.vertex; v++) {
       double forceVecNorm = forceVectors[v].distanceFromOrigin();
       double x = forceVectors[v].getX() / forceVecNorm * Math.min(forceVecNorm, temperature);
       double y = forceVectors[v].getY() / forceVecNorm * Math.min(forceVecNorm, temperature);
@@ -139,7 +139,7 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
 
   @Override
   public void update(final Coordinate[] result) {
-    System.arraycopy(result, 0, coordinates, 0, directedGraph.vertex);
+    System.arraycopy(result, 0, coordinates, 0, graph.vertex);
   }
 
   @Override
