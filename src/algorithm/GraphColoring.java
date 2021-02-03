@@ -41,12 +41,13 @@ public class GraphColoring implements AlgorithmInterface<Coloring> {
 
   @Override
   public Coloring algorithm(final int iteration) {
-    // TODO: determine probability
-    if (random.nextDouble() < 0.2) {
-      return swapStrategy();
+    double eval = evaluate(coloring);
+
+    if (random.nextDouble() < coloring.color / (eval + graph.vertex)) {
+      return replaceStrategy();
     }
 
-    return replaceStrategy();
+    return swapStrategy();
   }
 
   @Override
