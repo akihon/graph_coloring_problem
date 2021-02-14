@@ -6,15 +6,21 @@ import utils.exceptions.InvalidArgument;
  * WattsStrogatzNetworkArgs define arguments of wattsStrogatzNetwork method.
  */
 public class WattsStrogatzNetworkArgs {
+  final int vertex;
   final int degree;
   final double beta;
 
-  public WattsStrogatzNetworkArgs(final int degree, final double beta) {
+  public WattsStrogatzNetworkArgs(final int vertex, final int degree, final double beta) {
+    this.vertex = vertex;
     this.degree = degree;
     this.beta = beta;
   }
 
-  String valid(final int vertex) {
+  String valid() {
+    if (vertex <= 0) {
+      return "vertex is less than 1";
+    }
+
     if (degree >= vertex) {
       return String.format(
           "%s : degree is more than vertex (%d)",

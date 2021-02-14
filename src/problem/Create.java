@@ -1,9 +1,15 @@
 package problem;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import model.UndirectedGraph;
+import utils.FileSystem;
 import utils.exceptions.InvalidArgument;
+import utils.exceptions.NotFound;
 import utils.exceptions.OccurredBug;
 import utils.logger.Logger;
 
@@ -11,29 +17,25 @@ import utils.logger.Logger;
  * Create graph coloring problem.
  */
 public class Create implements CreateInterface {
-  private final int vertex;  // vertex > 0
   private final Random random;
   private final Logger logger;
 
   /**
    * constructor.
-   * if vertex is less than 1, throw invalid argument exception.
-   *
-   * @param vertex int
-   * @throws InvalidArgument invalid argument exception
    */
-  public Create(final int vertex) throws InvalidArgument {
-    if (vertex < 1) {
-      throw new InvalidArgument("vertex is more than 0");
-    }
-
-    this.vertex = vertex;
+  public Create() {
     random = new Random(System.currentTimeMillis());
     logger = new Logger(Create.class.getName(), null, true);
   }
 
   @Override
-  public UndirectedGraph randomNetwork(final double dense) throws InvalidArgument {
+  public UndirectedGraph randomNetwork(
+      final int vertex, final double dense
+  ) throws InvalidArgument {
+    if (vertex < 1) {
+      throw new InvalidArgument("vertex is more than 0");
+    }
+
     if (dense < 0.0 || dense > 1.0) {
       throw new InvalidArgument(
           String.format("%s : dense is a number between 0 and 1", Create.class.getName())
@@ -62,22 +64,22 @@ public class Create implements CreateInterface {
 
   @Override
   public UndirectedGraph wattsStrogatzNetwork(
-      WattsStrogatzNetworkArgs args
+      final WattsStrogatzNetworkArgs args
   ) throws InvalidArgument, OccurredBug {
-    String argsMsg = args.valid(vertex);
+    String argsMsg = args.valid();
     if (!argsMsg.equals("")) {
       throw new InvalidArgument(
           String.format("%s : %s", Create.class.getName(), argsMsg)
       );
     }
 
-    int mod = vertex - 1 - args.degree / 2;
+    int mod = args.vertex - 1 - args.degree / 2;
     int edge = 0;
-    int[] tail = new int[vertex * args.degree / 2];
-    int[] head = new int[vertex * args.degree / 2];
+    int[] tail = new int[args.vertex * args.degree / 2];
+    int[] head = new int[args.vertex * args.degree / 2];
 
-    for (int v = 0; v < vertex; v++) {
-      for (int u = 0; u < vertex; u++) {
+    for (int v = 0; v < args.vertex; v++) {
+      for (int u = 0; u < args.vertex; u++) {
         boolean exist = false;
 
         for (int e = 0; e < edge; e++) {
@@ -101,13 +103,13 @@ public class Create implements CreateInterface {
     }
 
     // replace
-    for (int v = 0; v < vertex; v++) {
+    for (int v = 0; v < args.vertex; v++) {
       for (int u = v + 1; u <= v + args.degree / 2; u++) {
         if (random.nextDouble() >= args.beta) {
           continue;
         }
 
-        int modU = u % vertex;
+        int modU = u % args.vertex;
 
         ArrayList<Integer> vertexes = new ArrayList<>();
         int edgeIndex = -1;
@@ -131,9 +133,9 @@ public class Create implements CreateInterface {
           throw new OccurredBug(msg);
         }
 
-        int k = random.nextInt(vertex);
+        int k = random.nextInt(args.vertex);
         while (vertexes.contains(k) || k == v) {
-          k = random.nextInt(vertex);
+          k = random.nextInt(args.vertex);
         }
 
         if (tail[edgeIndex] == v) {
@@ -145,13 +147,63 @@ public class Create implements CreateInterface {
     }
 
     logger.logger.info(
-        String.format("created undirected graph (vertex : %d, edge : %d)", vertex, edge)
+        String.format("created undirected graph (vertex : %d, edge : %d)", args.vertex, edge)
     );
-    return new UndirectedGraph(vertex, edge, tail, head);
+    return new UndirectedGraph(args.vertex, edge, tail, head);
   }
 
   @Override
-  public String toString() {
-    return String.format("vertex: %d", vertex);
+  public UndirectedGraph readFile(final String fileName) throws NotFound, OccurredBug {
+    String fullPath = FileSystem.pathJoin("./", "data", "graph_coloring", fileName);
+    int vertex = 0;
+    int edge = 0;
+    int index = 0;
+    int[] tail = null;
+    int[] head = null;
+
+    try (BufferedReader br = new BufferedReader(new FileReader(fullPath))) {
+      String line;
+
+      while ((line = br.readLine()) != null) {
+        String[] splitLine = line.split(" ");
+        if (splitLine.length == 0) {
+          continue;
+        }
+
+        switch (splitLine[0]) {
+          case "p":
+            vertex = Integer.parseInt(splitLine[2]);
+            edge = Integer.parseInt(splitLine[3]);
+            tail = new int[edge];
+            head = new int[edge];
+            break;
+          case "e":
+            if (tail == null) {
+              String message = String.format("unexpected file format (file = %s)", fullPath);
+              logger.logger.warning(message);
+              throw new OccurredBug(message);
+            }
+
+            tail[index] = Integer.parseInt(splitLine[1]) - 1;
+            head[index] = Integer.parseInt(splitLine[2]) - 1;
+            index++;
+            break;
+          default:
+        }
+      }
+    } catch (FileNotFoundException e) {
+      String message = String.format("%s (file = %s)", e.toString(), fullPath);
+      logger.logger.warning(message);
+      throw new NotFound(message);
+    } catch (IOException | NumberFormatException e) {
+      String message = String.format("%s (file = %s)", e.toString(), fullPath);
+      logger.logger.severe(message);
+      throw new OccurredBug(message);
+    }
+
+    logger.logger.info(
+        String.format("created undirected graph (vertex : %d, edge : %d)", vertex, edge)
+    );
+    return new UndirectedGraph(vertex, edge, tail, head);
   }
 }

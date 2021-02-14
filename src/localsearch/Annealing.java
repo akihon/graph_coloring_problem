@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public class Annealing<T> implements LocalSearchInterface {
   private static final int INITIAL_TEMPERATURE_LOOP_COUNT = 1000;
-  private static final double ALPHA = 0.97;  // 0.80 <= ALPHA <= 0.99
+  //private static final double ALPHA = 0.97;  // 0.80 <= ALPHA <= 0.99
 
   private final int maxIteration;
   private final int maxInnerLoop;
@@ -85,9 +85,9 @@ public class Annealing<T> implements LocalSearchInterface {
       logger.logger.config(
           String.format(
               "\n   iteration           : %10d\n" +
-                  "   temperature         : %16.5f\n" +
-                  "   best evaluate value : %16.5f\n" +
-                  "   evaluate value      : %16.5f\n" +
+                  "   temperature         : %20.9f\n" +
+                  "   best evaluate value : %20.9f\n" +
+                  "   evaluate value      : %20.9f\n" +
                   "   improve             : %b\n\n",
               iteration, temperature, bestEval, eval, improve
           )
@@ -95,7 +95,7 @@ public class Annealing<T> implements LocalSearchInterface {
     }
 
     logger.logger.info(
-        String.format("\nfinish !\nevaluation value : %16.5f", bestEval)
+        String.format("\nfinish !\nevaluation value : %20.9f", bestEval)
     );
 
     algo.update(best);
