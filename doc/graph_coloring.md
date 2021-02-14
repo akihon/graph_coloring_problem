@@ -1,5 +1,5 @@
 # Graph Coloring
-![](./pic/graph_coloring.png)
+![](picraph_coloring.png)
 
 ## Problem
 we solve the vertex coloring.  
