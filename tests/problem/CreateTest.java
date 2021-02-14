@@ -3,42 +3,11 @@ package problem;
 import model.UndirectedGraph;
 import org.junit.jupiter.api.Test;
 import utils.exceptions.InvalidArgument;
+import utils.exceptions.NotFound;
 import utils.exceptions.OccurredBug;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CreateTest {
-  @Test
-  public void TestCreate() {
-    // basic
-    {
-      CreateInterface valid;
-      try {
-        valid = new Create(1);
-        assertEquals("vertex: 1", valid.toString());
-      } catch (InvalidArgument invalidArgument) {
-        assertEquals("", invalidArgument.getMessage());
-      }
-    }
-
-    // exception (vertex)
-    {
-      CreateInterface invalid;
-      int[] vertexes = new int[]{0, -1};
-
-      for (int vertex : vertexes) {
-        try {
-          invalid = new Create(vertex);
-          assertEquals("", invalid.toString());
-        } catch (InvalidArgument invalidArgument) {
-          assertEquals(
-              "Invalid Argument : vertex is more than 0",
-              invalidArgument.getMessage()
-          );
-        }
-      }
-    }
-  }
-
   @Test
   public void TestRandomNetwork() {
     class TestCase {
@@ -73,8 +42,8 @@ class CreateTest {
 
     for (TestCase tc : testCases) {
       try {
-        CreateInterface createInterface = new Create(tc.vertex);
-        UndirectedGraph got = createInterface.randomNetwork(tc.dense);
+        CreateInterface createInterface = new Create();
+        UndirectedGraph got = createInterface.randomNetwork(tc.vertex, tc.dense);
 
         assertEquals(tc.want.vertex, got.vertex);
         assertEquals(tc.want.edge, got.edge);
@@ -99,8 +68,8 @@ class CreateTest {
 
       for (double dens : dense) {
         try {
-          invalid = new Create(10);
-          invalid.randomNetwork(dens);
+          invalid = new Create();
+          invalid.randomNetwork(10, dens);
         } catch (InvalidArgument invalidArgument) {
           assertEquals(
               "Invalid Argument : problem.Create : dense is a number between 0 and 1",
@@ -116,11 +85,44 @@ class CreateTest {
     // test that this method does not throw exceptions.
     for (int i = 0; i < 20; i++) {
       try {
-        CreateInterface create = new Create(128);
-        WattsStrogatzNetworkArgs args = new WattsStrogatzNetworkArgs(10, 0.5);
+        CreateInterface create = new Create();
+        WattsStrogatzNetworkArgs args = new WattsStrogatzNetworkArgs(128, 10, 0.5);
         create.wattsStrogatzNetwork(args);
       } catch (InvalidArgument | OccurredBug e) {
         assertEquals("", e.getMessage());
+      }
+    }
+  }
+
+  @Test
+  public void TestReadFile() {
+    CreateInterface create = new Create();
+    // basic
+    {
+      String fileName = "myciel3.txt";
+      UndirectedGraph want = new UndirectedGraph(
+          11,
+          20,
+          new int[]{0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 7, 8, 9},
+          new int[]{1, 3, 6, 8, 2, 5, 7, 4, 6, 9, 4, 5, 9, 7, 8, 10, 10, 10, 10, 10}
+      );
+
+      try {
+        UndirectedGraph got = create.readFile(fileName);
+
+        assertEquals(want.vertex, got.vertex);
+        assertEquals(want.edge, got.edge);
+        assertEquals(want.tail.length, got.tail.length);
+        assertEquals(want.head.length, got.head.length);
+
+        for (int i = 0; i < got.tail.length; i++) {
+          assertEquals(want.tail[i], got.tail[i]);
+        }
+        for (int i = 0; i < got.head.length; i++) {
+          assertEquals(want.head[i], got.head[i]);
+        }
+      } catch (NotFound | OccurredBug e) {
+        assertEquals("", e.toString());
       }
     }
   }
