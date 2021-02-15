@@ -10,6 +10,9 @@ import utils.exceptions.InvalidArgument;
 import utils.exceptions.NotFound;
 import utils.exceptions.OccurredBug;
 
+/**
+ * Executor solve the graph coloring.
+ */
 public class Executor {
   private final UndirectedGraph graph;
   private final AlgorithmInterface<Coloring> graphColoringAlgo;
@@ -19,6 +22,20 @@ public class Executor {
   private final boolean verbose;
   private final boolean draw;
 
+  /**
+   * constructor.
+   *
+   * @param graph                    model.UndirectedGraph
+   * @param graphColoringAlgo        algorithm.AlgorithmInterface
+   * @param graphColoringLocalSearch localsearch.LocalSearchInterface
+   * @param coordinatesAlgo          algorithm.AlgorithmInterface
+   * @param coordinatesLocalSearch   localsearch.LocalSearchInterface
+   * @param draw                     boolean
+   * @param verbose                  boolean
+   * @throws InvalidArgument invalid argument exception
+   * @throws NotFound        not found exception
+   * @throws OccurredBug     internal error exception
+   */
   public Executor(
       final UndirectedGraph graph,
       final AlgorithmInterface<Coloring> graphColoringAlgo,
@@ -37,6 +54,9 @@ public class Executor {
     this.draw = draw;
   }
 
+  /**
+   * go solve the graph coloring problem.
+   */
   public void go() {
     graphColoringLocalSearch.go();
 
