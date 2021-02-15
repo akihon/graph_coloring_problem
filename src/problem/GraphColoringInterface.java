@@ -6,9 +6,9 @@ import utils.exceptions.NotFound;
 import utils.exceptions.OccurredBug;
 
 /**
- * CreateInterface is repository regarding create graph coloring problem.
+ * GraphColoring is repository regarding create graph coloring problem.
  */
-public interface CreateInterface {
+public interface GraphColoringInterface {
   /**
    * randomNetwork create a random network.
    * if vertex <= 0, throws invalid exception.

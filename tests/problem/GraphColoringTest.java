@@ -7,7 +7,7 @@ import utils.exceptions.NotFound;
 import utils.exceptions.OccurredBug;
 import static org.junit.jupiter.api.Assertions.*;
 
-class CreateTest {
+class GraphColoringTest {
   @Test
   public void TestRandomNetwork() {
     class TestCase {
@@ -42,7 +42,7 @@ class CreateTest {
 
     for (TestCase tc : testCases) {
       try {
-        CreateInterface createInterface = new Create();
+        GraphColoringInterface createInterface = new GraphColoring();
         UndirectedGraph got = createInterface.randomNetwork(tc.vertex, tc.dense);
 
         assertEquals(tc.want.vertex, got.vertex);
@@ -63,16 +63,16 @@ class CreateTest {
 
     // exception (dense)
     {
-      CreateInterface invalid;
+      GraphColoringInterface invalid;
       double[] dense = new double[]{-0.0001, 1.00001};
 
       for (double dens : dense) {
         try {
-          invalid = new Create();
+          invalid = new GraphColoring();
           invalid.randomNetwork(10, dens);
         } catch (InvalidArgument invalidArgument) {
           assertEquals(
-              "Invalid Argument : problem.Create : dense is a number between 0 and 1",
+              "Invalid Argument : problem.GraphColoring : dense is a number between 0 and 1",
               invalidArgument.getMessage()
           );
         }
@@ -85,7 +85,7 @@ class CreateTest {
     // test that this method does not throw exceptions.
     for (int i = 0; i < 20; i++) {
       try {
-        CreateInterface create = new Create();
+        GraphColoringInterface create = new GraphColoring();
         WattsStrogatzNetworkArgs args = new WattsStrogatzNetworkArgs(128, 10, 0.5);
         create.wattsStrogatzNetwork(args);
       } catch (InvalidArgument | OccurredBug e) {
@@ -96,7 +96,7 @@ class CreateTest {
 
   @Test
   public void TestReadFile() {
-    CreateInterface create = new Create();
+    GraphColoringInterface create = new GraphColoring();
     // basic
     {
       String fileName = "myciel3.txt";

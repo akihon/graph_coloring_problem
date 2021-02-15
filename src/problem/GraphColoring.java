@@ -14,18 +14,18 @@ import utils.exceptions.OccurredBug;
 import utils.logger.Logger;
 
 /**
- * Create graph coloring problem.
+ * GraphColoring graph coloring problem.
  */
-public class Create implements CreateInterface {
+public class GraphColoring implements GraphColoringInterface {
   private final Random random;
   private final Logger logger;
 
   /**
    * constructor.
    */
-  public Create() {
+  public GraphColoring() {
     random = new Random(System.currentTimeMillis());
-    logger = new Logger(Create.class.getName(), null, true);
+    logger = new Logger(GraphColoring.class.getName(), null, true);
   }
 
   @Override
@@ -38,7 +38,7 @@ public class Create implements CreateInterface {
 
     if (dense < 0.0 || dense > 1.0) {
       throw new InvalidArgument(
-          String.format("%s : dense is a number between 0 and 1", Create.class.getName())
+          String.format("%s : dense is a number between 0 and 1", GraphColoring.class.getName())
       );
     }
 
@@ -69,7 +69,7 @@ public class Create implements CreateInterface {
     String argsMsg = args.valid();
     if (!argsMsg.equals("")) {
       throw new InvalidArgument(
-          String.format("%s : %s", Create.class.getName(), argsMsg)
+          String.format("%s : %s", GraphColoring.class.getName(), argsMsg)
       );
     }
 
@@ -127,7 +127,7 @@ public class Create implements CreateInterface {
 
         if (edgeIndex == -1) {
           String msg = String.format(
-              "%s : no edge (%d - %d)", Create.class.getName(), v, modU
+              "%s : no edge (%d - %d)", GraphColoring.class.getName(), v, modU
           );
           logger.logger.severe(msg);
           throw new OccurredBug(msg);
