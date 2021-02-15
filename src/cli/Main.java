@@ -1,12 +1,28 @@
 package cli;
 
-import cli.graphcoloring.Command;
+import algorithm.FruchtermanReingold;
+import cli.graphcoloring.Executor;
+import cli.graphcoloring.GenerateProblem;
 import java.util.Arrays;
+import localsearch.Annealing;
+import localsearch.LocalSearch;
+import model.Coloring;
+import model.Coordinate;
+import model.UndirectedGraph;
+import problem.GraphColoring;
 import utils.exceptions.InvalidArgument;
 import utils.exceptions.NotFound;
 import utils.exceptions.OccurredBug;
 
+/**
+ * Main class.
+ */
 public class Main {
+  /**
+   * main.
+   *
+   * @param args arguments
+   */
   public static void main(String[] args) {
     if (args.length == 0) {
       help();
@@ -20,7 +36,7 @@ public class Main {
     if (args.length > 1 && args[0].equals("help")) {
       switch (args[1]) {
         case "coloring":
-          Command.help();
+          GenerateProblem.help();
           break;
         default:
           help();
@@ -45,7 +61,8 @@ public class Main {
           break;
         case "coloring":
           if (i + 1 >= args.length) {
-            Command.help();
+            GenerateProblem.help();
+            return;
           }
 
           graphColoring(Arrays.copyOfRange(args, i + 1, args.length), draw, verbose);
@@ -59,16 +76,54 @@ public class Main {
     help();
   }
 
-  private void graphColoring(final String[] args, final boolean draw, final boolean verbose) {
-    Command cmd;
-    try {
-      cmd = new Command(args, draw, verbose);
-    } catch (InvalidArgument | NotFound | OccurredBug e) {
-      e.printStackTrace();
+  private void graphColoring(
+      final String[] args, final boolean draw, final boolean verbose
+  ) {
+    if (args == null || args.length < 1) {
+      GenerateProblem.help();
       return;
     }
 
-    cmd.go();
+    Executor exec;
+    try {
+      GenerateProblem generateProblem = new GenerateProblem(
+          args[0],
+          new GraphColoring()
+      );
+      UndirectedGraph graph = generateProblem.generate(
+          Arrays.copyOfRange(args, 1, args.length)
+      );
+
+      algorithm.GraphColoring graphColoringAlgo = new algorithm.GraphColoring(graph);
+      Annealing<Coloring> annealing = new Annealing<>(
+          (int) (1.0e6), // TODO
+          (int) (1.5e2), // TODO
+          graphColoringAlgo
+      );
+
+      FruchtermanReingold fruchtermanReingold = new FruchtermanReingold(graph);
+      LocalSearch<Coordinate[]> localSearch = new LocalSearch<>(
+          graph.vertex * graph.vertex + graph.edge,
+          1,
+          fruchtermanReingold
+      );
+
+      exec = new Executor(
+          graph,
+          graphColoringAlgo,
+          annealing,
+          fruchtermanReingold,
+          localSearch,
+          draw,
+          verbose
+      );
+    } catch (InvalidArgument | NotFound | OccurredBug e) {
+      System.out.println(e.getMessage());
+      GenerateProblem.help();
+      return;
+    }
+
+    exec.go();
   }
 
   private static void help() {

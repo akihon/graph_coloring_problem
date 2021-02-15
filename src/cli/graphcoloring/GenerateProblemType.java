@@ -1,6 +1,6 @@
 package cli.graphcoloring;
 
-public enum GenerateProblemAlgorithmType {
+public enum GenerateProblemType {
   unknown(0),
   random(1),
   wattsStrogatz(2),
@@ -8,7 +8,7 @@ public enum GenerateProblemAlgorithmType {
 
   final int type;
 
-  GenerateProblemAlgorithmType(int type) {
+  GenerateProblemType(int type) {
     this.type = type;
   }
 }
