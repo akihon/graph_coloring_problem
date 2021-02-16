@@ -11,21 +11,20 @@ import utils.FileSystem;
 import utils.exceptions.InvalidArgument;
 import utils.exceptions.NotFound;
 import utils.exceptions.OccurredBug;
-import utils.logger.Logger;
 
 /**
  * GraphColoring graph coloring problem.
  */
 public class GraphColoring implements GraphColoringInterface {
   private final Random random;
-  private final Logger logger;
+  private final boolean verbose;
 
   /**
    * constructor.
    */
-  public GraphColoring() {
+  public GraphColoring(final boolean verbose) {
     random = new Random(System.currentTimeMillis());
-    logger = new Logger(GraphColoring.class.getName(), null, true);
+    this.verbose = verbose;
   }
 
   @Override
@@ -56,9 +55,7 @@ public class GraphColoring implements GraphColoringInterface {
       }
     }
 
-    logger.logger.info(
-        String.format("created undirected graph (vertex : %d, edge : %d)", vertex, edge)
-    );
+    System.out.printf("created undirected graph (vertex : %d, edge : %d)\n", vertex, edge);
     return new UndirectedGraph(vertex, edge, tail, head);
   }
 
@@ -129,7 +126,6 @@ public class GraphColoring implements GraphColoringInterface {
           String msg = String.format(
               "%s : no edge (%d - %d)", GraphColoring.class.getName(), v, modU
           );
-          logger.logger.severe(msg);
           throw new OccurredBug(msg);
         }
 
@@ -146,9 +142,7 @@ public class GraphColoring implements GraphColoringInterface {
       }
     }
 
-    logger.logger.info(
-        String.format("created undirected graph (vertex : %d, edge : %d)", args.vertex, edge)
-    );
+    System.out.printf("created undirected graph (vertex : %d, edge : %d)", args.vertex, edge);
     return new UndirectedGraph(args.vertex, edge, tail, head);
   }
 
@@ -180,7 +174,6 @@ public class GraphColoring implements GraphColoringInterface {
           case "e":
             if (tail == null) {
               String message = String.format("unexpected file format (file = %s)", fullPath);
-              logger.logger.warning(message);
               throw new OccurredBug(message);
             }
 
@@ -193,17 +186,13 @@ public class GraphColoring implements GraphColoringInterface {
       }
     } catch (FileNotFoundException e) {
       String message = String.format("%s (file = %s)", e.toString(), fullPath);
-      logger.logger.warning(message);
       throw new NotFound(message);
     } catch (IOException | NumberFormatException e) {
       String message = String.format("%s (file = %s)", e.toString(), fullPath);
-      logger.logger.severe(message);
       throw new OccurredBug(message);
     }
 
-    logger.logger.info(
-        String.format("created undirected graph (vertex : %d, edge : %d)", vertex, edge)
-    );
+    System.out.printf("created undirected graph (vertex : %d, edge : %d)", vertex, edge);
     return new UndirectedGraph(vertex, edge, tail, head);
   }
 }

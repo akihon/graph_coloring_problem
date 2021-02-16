@@ -42,7 +42,7 @@ class GraphColoringTest {
 
     for (TestCase tc : testCases) {
       try {
-        GraphColoringInterface createInterface = new GraphColoring();
+        GraphColoringInterface createInterface = new GraphColoring(false);
         UndirectedGraph got = createInterface.randomNetwork(tc.vertex, tc.dense);
 
         assertEquals(tc.want.vertex, got.vertex);
@@ -68,7 +68,7 @@ class GraphColoringTest {
 
       for (double dens : dense) {
         try {
-          invalid = new GraphColoring();
+          invalid = new GraphColoring(false);
           invalid.randomNetwork(10, dens);
         } catch (InvalidArgument invalidArgument) {
           assertEquals(
@@ -85,7 +85,7 @@ class GraphColoringTest {
     // test that this method does not throw exceptions.
     for (int i = 0; i < 20; i++) {
       try {
-        GraphColoringInterface create = new GraphColoring();
+        GraphColoringInterface create = new GraphColoring(false);
         WattsStrogatzNetworkArgs args = new WattsStrogatzNetworkArgs(128, 10, 0.5);
         create.wattsStrogatzNetwork(args);
       } catch (InvalidArgument | OccurredBug e) {
@@ -96,7 +96,7 @@ class GraphColoringTest {
 
   @Test
   public void TestReadFile() {
-    GraphColoringInterface create = new GraphColoring();
+    GraphColoringInterface create = new GraphColoring(false);
     // basic
     {
       String fileName = "myciel3.txt";

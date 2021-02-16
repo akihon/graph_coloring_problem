@@ -1,7 +1,6 @@
 package localsearch;
 
 import algorithm.AlgorithmInterface;
-import utils.logger.Logger;
 
 /**
  * LocalSearch implements local search algorithm.
@@ -11,25 +10,26 @@ public class LocalSearch<T> implements LocalSearchInterface {
   private final int maxIteration;
   private final int maxInnerLoop;
   private final AlgorithmInterface<T> algo;
-  private final Logger logger;
-
+  private final boolean verbose;
 
   /**
    * constructor.
    *
    * @param maxIteration int
    * @param maxInnerLoop int
-   * @param algo algorithm.AlgorithmInterface
+   * @param algo         algorithm.AlgorithmInterface
+   * @param verbose      boolean
    */
   public LocalSearch(
       final int maxIteration,
       final int maxInnerLoop,
-      final AlgorithmInterface<T> algo
+      final AlgorithmInterface<T> algo,
+      final boolean verbose
   ) {
     this.maxIteration = maxIteration;
     this.maxInnerLoop = maxInnerLoop;
     this.algo = algo;
-    logger = new Logger(LocalSearch.class.getName(), null, true);
+    this.verbose = verbose;
   }
 
   @Override
@@ -40,13 +40,7 @@ public class LocalSearch<T> implements LocalSearchInterface {
     T result = algo.initialize();
     double eval = algo.evaluate(result);
 
-    logger.logger.info(
-        String.format(
-            "\nstart !\n" +
-                "initial evaluation value : %16.5f",
-           eval
-        )
-    );
+    System.out.printf("\nstart !\ninitial evaluation value : %16.5f\n", eval);
 
     while (improved && iteration++ < maxIteration) {
       int innerLoop = 0;
@@ -66,18 +60,16 @@ public class LocalSearch<T> implements LocalSearchInterface {
         }
       }
 
-      logger.logger.config(
-          String.format(
-              "\n   iteration           : %10d\n" +
-                  "   evaluate value      : %16.5f\n" +
-                  "   improve             : %b\n\n",
-              iteration, eval, improved
-          )
-      );
+      if (verbose) {
+        System.out.printf("\n"
+                + "   iteration           : %10d\n"
+                + "   evaluate value      : %16.5f\n"
+                + "   improve             : %b\n\n",
+            iteration, eval, improved
+        );
+      }
     }
 
-    logger.logger.info(
-        String.format("\nfinish !\nevaluation value : %16.5f", eval)
-    );
+    System.out.printf("\nfinish !\nevaluation value : %16.5f\n", eval);
   }
 }

@@ -88,7 +88,7 @@ public class Main {
     try {
       GenerateProblem generateProblem = new GenerateProblem(
           args[0],
-          new GraphColoring()
+          new GraphColoring(verbose)
       );
       UndirectedGraph graph = generateProblem.generate(
           Arrays.copyOfRange(args, 1, args.length)
@@ -98,14 +98,16 @@ public class Main {
       Annealing<Coloring> annealing = new Annealing<>(
           (int) (1.0e6), // TODO
           (int) (1.5e2), // TODO
-          graphColoringAlgo
+          graphColoringAlgo,
+          verbose
       );
 
       FruchtermanReingold fruchtermanReingold = new FruchtermanReingold(graph);
       LocalSearch<Coordinate[]> localSearch = new LocalSearch<>(
           graph.vertex * graph.vertex + graph.edge,
           1,
-          fruchtermanReingold
+          fruchtermanReingold,
+          verbose
       );
 
       exec = new Executor(

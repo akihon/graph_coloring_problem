@@ -1,7 +1,6 @@
 package localsearch;
 
 import algorithm.AlgorithmInterface;
-import utils.logger.Logger;
 import java.util.Random;
 
 /**
@@ -18,7 +17,7 @@ public class Annealing<T> implements LocalSearchInterface {
   private double initialTemperature;
   private final AlgorithmInterface<T> algo;
   private final Random random;
-  private final Logger logger;
+  private final boolean verbose;
 
   /**
    * constructor.
@@ -26,17 +25,19 @@ public class Annealing<T> implements LocalSearchInterface {
    * @param maxIteration int
    * @param maxInnerLoop int
    * @param algo         algorithm.AlgorithmInterface
+   * @param verbose      boolean
    */
   public Annealing(
       final int maxIteration,
       final int maxInnerLoop,
-      final AlgorithmInterface<T> algo
+      final AlgorithmInterface<T> algo,
+      final boolean verbose
   ) {
     this.maxIteration = maxIteration;
     this.maxInnerLoop = maxInnerLoop;
     this.algo = algo;
     random = new Random(System.currentTimeMillis());
-    logger = new Logger(Annealing.class.getName(), null, true);
+    this.verbose = verbose;
 
     initializeTemperature();
   }
@@ -47,13 +48,7 @@ public class Annealing<T> implements LocalSearchInterface {
     double bestEval = algo.evaluate(best);
     double eval = bestEval;
 
-    logger.logger.info(
-        String.format(
-            "\nstart !\n" +
-                "initial evaluation value : %16.5f",
-            bestEval
-        )
-    );
+    System.out.printf("\nstart !\n\ninitial evaluation value : %16.5f\n", bestEval);
 
     int iteration = 0;
     boolean improve = true;
@@ -82,21 +77,19 @@ public class Annealing<T> implements LocalSearchInterface {
         }
       }
 
-      logger.logger.config(
-          String.format(
-              "\n   iteration           : %10d\n" +
-                  "   temperature         : %20.9f\n" +
-                  "   best evaluate value : %20.9f\n" +
-                  "   evaluate value      : %20.9f\n" +
-                  "   improve             : %b\n\n",
-              iteration, temperature, bestEval, eval, improve
-          )
-      );
+      if (verbose) {
+        System.out.printf("\n"
+                + "   iteration           : %10d\n"
+                + "   temperature         : %20.9f\n"
+                + "   best evaluate value : %20.9f\n"
+                + "   evaluate value      : %20.9f\n"
+                + "   improve             : %b\n\n",
+            iteration, temperature, bestEval, eval, improve
+        );
+      }
     }
 
-    logger.logger.info(
-        String.format("\nfinish !\nevaluation value : %20.9f", bestEval)
-    );
+    System.out.printf("\nfinish !\nevaluation value : %20.9f\n", bestEval);
 
     algo.update(best);
   }
@@ -128,7 +121,7 @@ public class Annealing<T> implements LocalSearchInterface {
       }
     }
 
-    logger.logger.info(String.format("initial temperature : %16.5f", initialTemperature));
+    System.out.printf("initial temperature : %16.5f\n", initialTemperature);
   }
 
   private boolean updateProbability(
