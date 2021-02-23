@@ -142,7 +142,7 @@ public class GraphColoring implements GraphColoringInterface {
       }
     }
 
-    System.out.printf("created undirected graph (vertex : %d, edge : %d)", args.vertex, edge);
+    System.out.printf("created undirected graph (vertex : %d, edge : %d)\n", args.vertex, edge);
     return new UndirectedGraph(args.vertex, edge, tail, head);
   }
 
@@ -192,7 +192,7 @@ public class GraphColoring implements GraphColoringInterface {
       throw new OccurredBug(message);
     }
 
-    System.out.printf("created undirected graph (vertex : %d, edge : %d)", vertex, edge);
+    System.out.printf("created undirected graph (vertex : %d, edge : %d)\n", vertex, edge);
     return new UndirectedGraph(vertex, edge, tail, head);
   }
 }
