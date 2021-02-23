@@ -42,7 +42,7 @@ public class FruchtermanReingold implements AlgorithmInterface<Coordinate[]> {
         isSame = false;
 
         for (int i = 0; i < v; i++) {
-          if (coordinates[i].equal(c, ERR)) {
+          if (coordinates[i].equals(c)) {
             isSame = true;
             break;
           }

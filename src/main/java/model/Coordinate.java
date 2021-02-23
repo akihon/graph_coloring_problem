@@ -4,6 +4,8 @@ package model;
  * Coordination express coordination.
  */
 public class Coordinate {
+  private static final double ERR = 1.0e-9;
+
   private double coordinateX;
   private double coordinateY;
 
@@ -40,17 +42,6 @@ public class Coordinate {
     return this.distance(new Coordinate(0, 0));
   }
 
-  /**
-   * equal check the same coordinate of argument.
-   *
-   * @param c   Coordinate
-   * @param err double
-   * @return boolean
-   */
-  public boolean equal(final Coordinate c, final double err) {
-    return Math.abs(coordinateX - c.getX()) < err && Math.abs(coordinateY - c.getY()) < err;
-  }
-
   public void add(final Coordinate c) {
     coordinateX += c.getX();
     coordinateY += c.getY();
@@ -67,6 +58,17 @@ public class Coordinate {
 
   public double getY() {
     return coordinateY;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Coordinate) {
+      Coordinate other = (Coordinate) obj;
+      return Math.abs(coordinateX - other.coordinateX) < ERR
+          && Math.abs(coordinateY - other.coordinateY) < ERR;
+    }
+
+    return false;
   }
 
   @Override

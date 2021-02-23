@@ -128,13 +128,11 @@ class CoordinateTest {
     class TestCase {
       final Coordinate in;
       final Coordinate target;
-      final double err;
       final boolean want;
 
-      TestCase(Coordinate in, Coordinate target, double err, boolean want) {
+      TestCase(Coordinate in, Coordinate target, boolean want) {
         this.in = in;
         this.target = target;
-        this.err = err;
         this.want = want;
       }
     }
@@ -143,43 +141,32 @@ class CoordinateTest {
         new TestCase(
             new Coordinate(0, 0),
             new Coordinate(1, 0),
-            1.1,
-            true
+           false
         ),
         new TestCase(
             new Coordinate(0, 0),
             new Coordinate(0, 1),
-            1.1,
-            true
+            false
         ),
         new TestCase(
             new Coordinate(0, 0),
-            new Coordinate(0.1, 0),
-            0.09,
-            false
+            new Coordinate(0, 0),
+           true
         ),
         new TestCase(
             new Coordinate(0, 0),
             new Coordinate(0, 0.1),
-            0.09,
-            false
+           false
         ),
         new TestCase(
-            new Coordinate(0, 0),
+            new Coordinate(1.0, 1.0),
             new Coordinate(1, 1),
-            1.4143,
             true
-        ),
-        new TestCase(
-            new Coordinate(0, 0),
-            new Coordinate(1, 1),
-            1.4141,
-            true
-        ),
+        )
     };
 
     for (TestCase tc : testCases) {
-      boolean got = tc.in.equal(tc.target, tc.err);
+      boolean got = tc.in.equals(tc.target);
       assertEquals(tc.want, got);
     }
   }
@@ -223,7 +210,7 @@ class CoordinateTest {
 
     for (TestCase tc : testCases) {
       tc.in.add(tc.target);
-      assertTrue(tc.in.equal(tc.want, 1.0e-9));
+      assertEquals(tc.want, tc.in);
     }
   }
 
@@ -266,7 +253,7 @@ class CoordinateTest {
 
     for (TestCase tc : testCases) {
       tc.in.sub(tc.target);
-      assertTrue(tc.in.equal(tc.want, 1.0e-9));
+      assertEquals(tc.want, tc.in);
     }
   }
 }
