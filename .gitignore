@@ -1,3 +1,4 @@
 /.idea/
-/out/
-graph_coloring_problem.iml
+/target/
+
+graph_optimization.iml
