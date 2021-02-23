@@ -1,7 +1,5 @@
 package problem;
 
-import utils.exceptions.InvalidArgument;
-
 /**
  * WattsStrogatzNetworkArgs define arguments of wattsStrogatzNetwork method.
  */
@@ -60,5 +58,15 @@ public class WattsStrogatzNetworkArgs {
     }
 
     return "";
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof WattsStrogatzNetworkArgs) {
+      WattsStrogatzNetworkArgs other = (WattsStrogatzNetworkArgs) obj;
+      return vertex == other.vertex && degree == other.degree && beta == other.beta;
+    }
+
+    return false;
   }
 }

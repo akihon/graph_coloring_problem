@@ -17,13 +17,18 @@ public class GenerateProblem {
   /**
    * constructor.
    *
-   * @param type String
+   * @param type                   String
    * @param graphColoringInterface problem.GraphColoringInterface
    * @throws InvalidArgument invalid argument exception
    */
   public GenerateProblem(
       final String type, final GraphColoringInterface graphColoringInterface
   ) throws InvalidArgument {
+    if (type == null) {
+      throw new InvalidArgument("unknown problem type");
+    }
+
+    // null check... whatever
     this.graphColoringInterface = graphColoringInterface;
 
     switch (type) {
@@ -36,11 +41,12 @@ public class GenerateProblem {
       case "WattsStrogatz":
         this.type = GenerateProblemType.wattsStrogatz;
         break;
+      case "f":
       case "file":
         this.type = GenerateProblemType.file;
         break;
       default:
-        throw new InvalidArgument("Invalid Argument");
+        throw new InvalidArgument("unknown problem type");
     }
   }
 
@@ -70,8 +76,8 @@ public class GenerateProblem {
    * @param args array of String
    * @return model.UndirectedGraph
    * @throws InvalidArgument invalid argument exception
-   * @throws NotFound not found exception
-   * @throws OccurredBug internal error exception
+   * @throws NotFound        not found exception
+   * @throws OccurredBug     internal error exception
    */
   public UndirectedGraph generate(
       final String[] args
@@ -94,6 +100,10 @@ public class GenerateProblem {
     }
   }
 
+  public GenerateProblemType getType() {
+    return type;
+  }
+
   private Arguments toModel(final String[] args) throws InvalidArgument {
     try {
       switch (type) {
@@ -107,7 +117,7 @@ public class GenerateProblem {
           throw new InvalidArgument("Invalid Argument");
       }
     } catch (NumberFormatException e) {
-      throw new InvalidArgument("Invalid Argument");
+      throw new InvalidArgument("no number");
     }
   }
 
@@ -116,20 +126,26 @@ public class GenerateProblem {
     int vertex = 10;
     double dense = 0.3;
 
-    while (i < args.length) {
-      switch (args[i].trim()) {
-        case "-v":
-        case "--vertex":
-          vertex = Integer.parseInt(args[++i]);
-          break;
-        case "-d":
-        case "--dense":
-          dense = Double.parseDouble(args[++i]);
-          break;
-        default:
-      }
+    if (args != null) {
+      while (i < args.length) {
+        switch (args[i].trim()) {
+          case "-v":
+          case "--vertex":
+            if (++i < args.length) {
+              vertex = Integer.parseInt(args[i]);
+            }
+            break;
+          case "-d":
+          case "--dense":
+            if (++i < args.length) {
+              dense = Double.parseDouble(args[i]);
+            }
+            break;
+          default:
+        }
 
-      i++;
+        i++;
+      }
     }
 
     return new Arguments(
@@ -149,24 +165,32 @@ public class GenerateProblem {
     int degree = 6;
     double beta = 0.1;
 
-    while (i < args.length) {
-      switch (args[i].trim()) {
-        case "-v":
-        case "--vertex":
-          vertex = Integer.parseInt(args[++i]);
-          break;
-        case "-d":
-        case "--degree":
-          degree = Integer.parseInt(args[++i]);
-          break;
-        case "-b":
-        case "--beta":
-          beta = Double.parseDouble(args[++i]);
-          break;
-        default:
-      }
+    if (args != null) {
+      while (i < args.length) {
+        switch (args[i].trim()) {
+          case "-v":
+          case "--vertex":
+            if (++i < args.length) {
+              vertex = Integer.parseInt(args[i]);
+            }
+            break;
+          case "-d":
+          case "--degree":
+            if (++i < args.length) {
+              degree = Integer.parseInt(args[i]);
+            }
+            break;
+          case "-b":
+          case "--beta":
+            if (++i < args.length) {
+              beta = Double.parseDouble(args[i]);
+            }
+            break;
+          default:
+        }
 
-      i++;
+        i++;
+      }
     }
 
     return new Arguments(
@@ -182,16 +206,20 @@ public class GenerateProblem {
     int i = 0;
     String fileName = null;
 
-    while (i < args.length) {
-      switch (args[i].trim()) {
-        case "-f":
-        case "--file-name":
-          fileName = args[++i];
-          break;
-        default:
-      }
+    if (args != null) {
+      while (i < args.length) {
+        switch (args[i].trim()) {
+          case "-f":
+          case "--file-name":
+            if (++i < args.length) {
+              fileName = args[i];
+            }
+            break;
+          default:
+        }
 
-      i++;
+        i++;
+      }
     }
 
     return new Arguments(
