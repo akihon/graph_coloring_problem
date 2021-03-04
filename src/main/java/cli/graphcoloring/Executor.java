@@ -6,9 +6,6 @@ import localsearch.LocalSearchInterface;
 import model.Coloring;
 import model.Coordinate;
 import model.UndirectedGraph;
-import utils.exceptions.InvalidArgument;
-import utils.exceptions.NotFound;
-import utils.exceptions.OccurredBug;
 
 /**
  * Executor solve the graph coloring.
@@ -32,9 +29,6 @@ public class Executor {
    * @param coordinatesLocalSearch   localsearch.LocalSearchInterface
    * @param draw                     boolean
    * @param verbose                  boolean
-   * @throws InvalidArgument invalid argument exception
-   * @throws NotFound        not found exception
-   * @throws OccurredBug     internal error exception
    */
   public Executor(
       final UndirectedGraph graph,
@@ -44,7 +38,7 @@ public class Executor {
       final LocalSearchInterface coordinatesLocalSearch,
       final boolean draw,
       final boolean verbose
-  ) throws InvalidArgument, NotFound, OccurredBug {
+  )  {
     this.graph = graph;
     this.graphColoringAlgo = graphColoringAlgo;
     this.graphColoringLocalSearch = graphColoringLocalSearch;
