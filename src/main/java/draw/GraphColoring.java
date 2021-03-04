@@ -14,10 +14,9 @@ import model.UndirectedGraph;
 /**
  * Graph draw a graph.
  */
-public class Graph extends JFrame {
+public class GraphColoring extends JFrame {
   private static final int WIDTH = 800;
   private static final int HEIGHT = 600;
-  private final DrawPanel dp;
   private final Color[] colors = new Color[]{
       Color.RED,
       Color.GREEN,
@@ -33,8 +32,8 @@ public class Graph extends JFrame {
       Color.BLACK
   };
   private final UndirectedGraph graph;
-  private Coordinate[] coordinates;
-  private Coloring coloring;
+  private final Coordinate[] coordinates;
+  private final Coloring coloring;
 
   /**
    * constructor.
@@ -43,7 +42,7 @@ public class Graph extends JFrame {
    * @param coordinates array of model.Coordinate
    * @param coloring    model.Coloring
    */
-  public Graph(
+  public GraphColoring(
       UndirectedGraph graph,
       Coordinate[] coordinates,
       Coloring coloring
@@ -58,29 +57,16 @@ public class Graph extends JFrame {
     this.coordinates = Arrays.copyOf(coordinates, coordinates.length);
     this.coloring = coloring.copy();
 
-    dp = new DrawPanel();
+    DrawPanel dp = new DrawPanel();
     add(dp, BorderLayout.CENTER);
 
     setVisible(true);
   }
 
   /**
-   * draw is drawing again after updating coordinates and coloring.
-   *
-   * @param coordinates arrays of model.Coordinate
-   * @param coloring    model.Coloring
-   */
-  public void draw(Coordinate[] coordinates, Coloring coloring) {
-    this.coordinates = Arrays.copyOf(coordinates, coordinates.length);
-    this.coloring = coloring.copy();
-    dp.repaint();
-    setVisible(true);
-  }
-
-  /**
    * DrawPanel define a panel.
    */
-  public class DrawPanel extends JPanel {
+  private class DrawPanel extends JPanel {
     /**
      * paintComponent override.
      *

@@ -1,7 +1,7 @@
 package cli.graphcoloring;
 
 import algorithm.AlgorithmInterface;
-import draw.Graph;
+import draw.GraphColoring;
 import localsearch.LocalSearchInterface;
 import model.Coloring;
 import model.Coordinate;
@@ -70,7 +70,7 @@ public class Executor {
         }
       }
 
-      new Graph(graph, coordinatesAlgo.getResult(), graphColoringAlgo.getResult());
+      new GraphColoring(graph, coordinatesAlgo.getResult(), graphColoringAlgo.getResult());
     }
   }
 }
